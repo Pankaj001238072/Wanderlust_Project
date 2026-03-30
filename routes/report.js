@@ -75,45 +75,31 @@ router.post("/", async (req, res) => {
 
     await report.save();
 
-    // Send email in background (non-blocking) — don't let email failure break the flow
+    // Send email in background (non-blocking) — keeps submit instant
     setImmediate(async () => {
       try {
         const transporter = nodemailer.createTransport({
-          host: "smtp.gmail.com",
-          port: 587,
-          secure: false, // STARTTLS
-          requireTLS: true,
+          service: "gmail",
           auth: {
-            user: process.env.CONTACT_EMAIL_USER?.trim(),
-            pass: process.env.CONTACT_EMAIL_PASS?.trim(),
+            user: process.env.CONTACT_EMAIL_USER,
+            pass: process.env.CONTACT_EMAIL_PASS,
           },
-          connectionTimeout: 15000,
-          greetingTimeout: 15000,
-          socketTimeout: 20000,
         });
 
         await transporter.sendMail({
           from: process.env.CONTACT_EMAIL_USER,
-          to:
-            process.env.CONTACT_EMAIL_RECEIVER ||
-            process.env.CONTACT_EMAIL_USER,
+          to: process.env.CONTACT_EMAIL_RECEIVER || process.env.CONTACT_EMAIL_USER,
           subject: "🚨 New Report Submission",
-          text: `
-New Report Received:
-
-Reason: ${reason}
-Description: ${description}
-Email: ${email || "N/A"}
-          `,
+          text: `New Report Received:\n\nReason: ${reason}\nDescription: ${description}\nEmail: ${email || "N/A"}`,
         });
 
         console.log("Report email sent successfully.");
       } catch (mailErr) {
-        console.error("Report email sending failed (non-blocking):", mailErr.message);
+        console.error("Report email sending failed:", mailErr.message);
       }
     });
 
-    // Always return success after DB save — email is background task
+    // Always return success after DB save
     return res.render("report-success", { reason });
 
   } catch (err) {
