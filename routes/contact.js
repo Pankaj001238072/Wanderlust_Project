@@ -63,36 +63,45 @@ router.post("/", async (req, res) => {
   }
 
   try {
-    // Save to database
+    // Save to database first
     const contact = new Contact({ name, email, message });
     await contact.save();
 
-    // Send email
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
-      auth: {
-        user: process.env.CONTACT_EMAIL_USER?.trim(),
-        pass: process.env.CONTACT_EMAIL_PASS?.trim(),
-      },
-      connectionTimeout: 10000, // 10s
-      greetingTimeout: 10000,
-      socketTimeout: 15000,
+    // Send email in background (non-blocking) — don't let email failure break the flow
+    setImmediate(async () => {
+      try {
+        const transporter = nodemailer.createTransport({
+          host: "smtp.gmail.com",
+          port: 465,
+          secure: true,
+          auth: {
+            user: process.env.CONTACT_EMAIL_USER?.trim(),
+            pass: process.env.CONTACT_EMAIL_PASS?.trim(),
+          },
+          connectionTimeout: 10000,
+          greetingTimeout: 10000,
+          socketTimeout: 15000,
+        });
+
+        await transporter.sendMail({
+          from: process.env.CONTACT_EMAIL_USER,
+          to:
+            process.env.CONTACT_EMAIL_RECEIVER ||
+            process.env.CONTACT_EMAIL_USER,
+          subject: "New Contact Form Submission",
+          text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
+        });
+
+        console.log("Contact email sent successfully.");
+      } catch (mailErr) {
+        console.error("Contact email sending failed (non-blocking):", mailErr.message);
+      }
     });
 
-    await transporter.sendMail({
-      from: process.env.CONTACT_EMAIL_USER,
-      to:
-        process.env.CONTACT_EMAIL_RECEIVER ||
-        process.env.CONTACT_EMAIL_USER,
-      subject: "New Contact Form Submission",
-      text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
-    });
-
+    // Always return success after DB save — email is background task
     return res.render("contact-success", { name });
   } catch (err) {
-    console.error("Contact form error:", err);
+    console.error("Contact form DB error:", err);
     return res.status(500).render("error", {
       message:
         "Sorry, something went wrong. Please try again later.",

@@ -66,7 +66,7 @@ router.post("/", async (req, res) => {
   }
 
   try {
-    // ✅ Save to DB
+    // ✅ Save to DB first
     const report = new Report({
       reason,
       description,
@@ -75,39 +75,48 @@ router.post("/", async (req, res) => {
 
     await report.save();
 
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
-      auth: {
-        user: process.env.CONTACT_EMAIL_USER?.trim(),
-        pass: process.env.CONTACT_EMAIL_PASS?.trim(),
-      },
-      connectionTimeout: 10000,
-      greetingTimeout: 10000,
-      socketTimeout: 15000,
-    });
+    // Send email in background (non-blocking) — don't let email failure break the flow
+    setImmediate(async () => {
+      try {
+        const transporter = nodemailer.createTransport({
+          host: "smtp.gmail.com",
+          port: 465,
+          secure: true,
+          auth: {
+            user: process.env.CONTACT_EMAIL_USER?.trim(),
+            pass: process.env.CONTACT_EMAIL_PASS?.trim(),
+          },
+          connectionTimeout: 10000,
+          greetingTimeout: 10000,
+          socketTimeout: 15000,
+        });
 
-    await transporter.sendMail({
-      from: process.env.CONTACT_EMAIL_USER,
-      to:
-        process.env.CONTACT_EMAIL_RECEIVER ||
-        process.env.CONTACT_EMAIL_USER,
-      subject: "🚨 New Report Submission",
-      text: `
+        await transporter.sendMail({
+          from: process.env.CONTACT_EMAIL_USER,
+          to:
+            process.env.CONTACT_EMAIL_RECEIVER ||
+            process.env.CONTACT_EMAIL_USER,
+          subject: "🚨 New Report Submission",
+          text: `
 New Report Received:
 
 Reason: ${reason}
 Description: ${description}
 Email: ${email || "N/A"}
-      `,
+          `,
+        });
+
+        console.log("Report email sent successfully.");
+      } catch (mailErr) {
+        console.error("Report email sending failed (non-blocking):", mailErr.message);
+      }
     });
 
-    // ✅ Success page
+    // Always return success after DB save — email is background task
     return res.render("report-success", { reason });
 
   } catch (err) {
-    console.error("Report form error:", err);
+    console.error("Report form DB error:", err);
     return res.status(500).render("error", {
       message: "Sorry, something went wrong. Please try again later.",
     });
