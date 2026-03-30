@@ -76,10 +76,12 @@ router.post("/", async (req, res) => {
     await report.save();
 
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
       auth: {
-        user: process.env.CONTACT_EMAIL_USER,
-        pass: process.env.CONTACT_EMAIL_PASS,
+        user: process.env.CONTACT_EMAIL_USER?.trim(),
+        pass: process.env.CONTACT_EMAIL_PASS?.trim(),
       },
       connectionTimeout: 10000,
       greetingTimeout: 10000,
