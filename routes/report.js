@@ -39,6 +39,7 @@ router.post("/", async (req, res) => {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
+      timeout: 10000,
     });
 
     if (!response.data.success) {
@@ -74,13 +75,15 @@ router.post("/", async (req, res) => {
 
     await report.save();
 
-    // ✅ Send email
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
         user: process.env.CONTACT_EMAIL_USER,
         pass: process.env.CONTACT_EMAIL_PASS,
       },
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 15000,
     });
 
     await transporter.sendMail({

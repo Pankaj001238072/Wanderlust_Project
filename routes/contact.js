@@ -37,6 +37,7 @@ router.post("/", async (req, res) => {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
+      timeout: 10000, // 10s wait for google recaptcha
     });
 
     if (!response.data.success) {
@@ -73,6 +74,9 @@ router.post("/", async (req, res) => {
         user: process.env.CONTACT_EMAIL_USER,
         pass: process.env.CONTACT_EMAIL_PASS,
       },
+      connectionTimeout: 10000, // 10s
+      greetingTimeout: 10000,
+      socketTimeout: 15000,
     });
 
     await transporter.sendMail({
