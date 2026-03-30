@@ -8,6 +8,7 @@ if (process.env.NODE_ENV !== "production") {
 
 const express = require("express"); // Importing the express module, use to create routes like GET, POST
 const app = express(); // Creating an instance of express
+app.set('trust proxy', 2); // Trust the reverse proxy chain (like Render's multiple load balancer IPs) to ensure correct IP and Secure cookie handling
 const mongoose = require("mongoose"); // Importing mongoose for MongoDB interaction
 const path = require("path"); // Importing path module for handling file paths
 const methodOverride = require("method-override"); // Importing method-override for supporting PUT and DELETE methods
