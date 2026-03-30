@@ -12,7 +12,14 @@ const User = require("../models/user");
 
 // temporary upload to local folder (will be uploaded to Cloudinary only after validation)
 const path = require("path");
+const fs = require("fs");
 const uploadDir = path.join(__dirname, "..", "uploads");
+
+// Safely create the uploads directory if it doesn't exist on Render
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
 const upload = multer({ dest: uploadDir });
 
 // Index Route to display all listings and Create Route to add a new listing

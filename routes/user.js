@@ -23,12 +23,17 @@ const { compressImage } = require("../helpers/imageHelper");
 const fs = require("fs");
 
 // Multer config for local temp storage (before compression)
+const profileUploadPath = path.join(__dirname, "../public/uploads/profile");
+if (!fs.existsSync(profileUploadPath)) {
+  fs.mkdirSync(profileUploadPath, { recursive: true });
+}
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(
-      null,
-      path.join(__dirname, "../public/uploads/profile"),
-    );
+    if (!fs.existsSync(profileUploadPath)) {
+      fs.mkdirSync(profileUploadPath, { recursive: true });
+    }
+    cb(null, profileUploadPath);
   },
   filename: function (req, file, cb) {
     const ext = path.extname(file.originalname);
