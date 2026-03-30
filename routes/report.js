@@ -80,15 +80,16 @@ router.post("/", async (req, res) => {
       try {
         const transporter = nodemailer.createTransport({
           host: "smtp.gmail.com",
-          port: 465,
-          secure: true,
+          port: 587,
+          secure: false, // STARTTLS
+          requireTLS: true,
           auth: {
             user: process.env.CONTACT_EMAIL_USER?.trim(),
             pass: process.env.CONTACT_EMAIL_PASS?.trim(),
           },
-          connectionTimeout: 10000,
-          greetingTimeout: 10000,
-          socketTimeout: 15000,
+          connectionTimeout: 15000,
+          greetingTimeout: 15000,
+          socketTimeout: 20000,
         });
 
         await transporter.sendMail({
