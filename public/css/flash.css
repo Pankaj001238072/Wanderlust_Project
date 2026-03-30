@@ -1,0 +1,71 @@
+.flash-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 0.65rem;
+}
+
+.flash-alert {
+  width: 100%;
+  max-width: 680px;
+  margin-bottom: 0.6rem;
+  padding: 0.75rem 2.8rem 0.75rem 1rem;
+  border-radius: 0.75rem;
+  text-align: center;
+  word-break: break-word;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.flash-alert .btn-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.7rem;
+  z-index: 2;
+  padding: 0.3rem 0.7rem;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.flash-alert .btn-close {
+  color: #333;
+  opacity: 1;
+  font-size: 1.5rem;
+  z-index: 10;
+}
+
+/* Fallback for Bootstrap 5 close icon if not visible */
+.flash-alert .btn-close::before {
+  content: "\00d7";
+  font-size: 1.5rem;
+  color: #333;
+  font-weight: bold;
+  line-height: 1;
+  vertical-align: middle;
+  display: inline-block;
+}
+
+@media (max-width: 767px) {
+  .flash-wrapper {
+    margin-top: 0.5rem;
+  }
+
+  .flash-alert {
+    width: 100%;
+    max-width: 95vw;
+    margin-inline: 0.35rem;
+    padding: 0.7rem 2.2rem 0.7rem 0.7rem;
+    font-size: 0.92rem;
+    word-break: break-word;
+    box-sizing: border-box;
+  }
+  .flash-alert .btn-close {
+    top: 0.3rem;
+    right: 0.5rem;
+    font-size: 1.3rem;
+    padding: 0.2rem 0.5rem;
+  }
+}

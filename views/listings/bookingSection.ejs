@@ -1,0 +1,44 @@
+<% if (currUser) { %>
+    <% const baseGuests=Math.max(1, Number(listing.baseGuests ?? 2)); %>
+        <% const maxGuests=Math.max(1, Number(listing.maxGuests ?? 4)); %>
+            <% const maxKids=Math.max(0, Number(listing.maxKids ?? 2)); %>
+                <% const maxInfants=Math.max(0, Number(listing.maxInfants ?? 0)); %>
+                    <% const maxPets=Math.max(0, Number(listing.maxPets ?? 0)); %>
+                        <% const extraGuestFeePerNight=Math.max(0, Number(listing.extraGuestFeePerNight ?? 0)); %>
+                            <% const nightlyPrice=Math.max(0, Number(listing.price ?? 0)); %>
+
+                                <div id="bookingSectionData" data-base-guests="<%= baseGuests %>"
+                                    data-max-guests="<%= maxGuests %>" data-max-kids="<%= maxKids %>"
+                                    data-max-infants="<%= maxInfants %>" data-max-pets="<%= maxPets %>"
+                                    data-extra-guest-fee-per-night="<%= extraGuestFeePerNight %>"
+                                    data-nightly-price="<%= nightlyPrice %>">
+                                    <hr />
+                                    <h4>Book this place</h4>
+
+                                    <div class="alert alert-info py-2 mb-2" role="alert">
+                                        <b>Cancellation Policy:</b>
+                                        <ul class="mb-0 mt-1 ps-3">
+                                            <li>Cancellation is allowed within 30 minutes of booking confirmation, or at
+                                                least 2 hours before check-in.</li>
+                                            <li>After this window, cancellation is not permitted.</li>
+                                        </ul>
+                                    </div>
+
+                                    <%- include("./booking/policy-card.ejs", { baseGuests, maxGuests, maxKids,
+                                        maxInfants, maxPets, extraGuestFeePerNight, }) %>
+
+                                        <%- include("./booking/availability-notice.ejs", { bookedDateRanges }) %>
+
+                                            <%- include("./booking/current-booking.ejs", { currentUserBooking }) %>
+
+                                                <%- include("./booking/booking-form.ejs", { listing, maxPets, }) %>
+
+                                                    <%- include("./booking/summary-card.ejs") %>
+
+                                                        <hr />
+                                </div>
+
+                                <script src="/js/booking-ui-utils.js"></script>
+                                <script src="/js/booking-ui-state.js"></script>
+                                <script src="/js/booking-section.js"></script>
+                                <% } %>

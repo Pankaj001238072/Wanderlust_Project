@@ -1,0 +1,165 @@
+<nav class="navbar navbar-expand-lg bg-body-light border-bottom sticky-top">
+  <div class="container-fluid main-nav-container">
+
+    <!-- Brand Logo -->
+    <a class="navbar-brand wl-brand-wrap" href="/listings">
+      <i class="fa-solid fa-compass"></i>
+      <span class="wl-brand-label">Wanderlust</span>
+    </a>
+
+    <!-- Mobile: explore link -->
+    <!-- <a class="nav-link mobile-explore-link d-lg-none" href="/listings">Explore</a> -->
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+
+      <!-- Center: Search -->
+      <div class="navbar-nav mx-auto wl-search-center">
+        <form class="d-flex" role="search" action="/listings" method="GET">
+          <input class="form-control me-2 search-inp" type="search" name="search" placeholder="Search destinations" />
+          <button class="btn search-btn" type="submit">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            Search
+          </button>
+        </form>
+      </div>
+
+      <!-- Right: Nav links -->
+      <div class="navbar-nav ms-auto align-items-center wl-right-nav">
+
+        <!-- Explore (desktop only) -->
+        <a class="nav-link wl-icon-link desktop-explore-link" href="/listings">
+          <i class="fa-solid fa-earth-asia"></i> Explore
+        </a>
+
+        <!-- Host -->
+        <a class="nav-link wl-icon-link" href="/listings/new">
+          <i class="fa-solid fa-circle-plus"></i> Host
+        </a>
+
+        <!-- Wishlist (desktop) -->
+        <a class="nav-link wl-icon-link" href="/listings/wishlist">
+          <i class="fa-regular fa-heart"></i> Wishlist
+        </a>
+
+        <% if(typeof currUser==='undefined' || !currUser) { %>
+          <a class="nav-link" href="/signup"><b>Sign up</b></a>
+          <a class="nav-link" href="/login"><b>Log in</b></a>
+          <% } else { %>
+
+            <!-- Notifications Dropdown -->
+            <div class="wl-bell-dropdown" id="notificationDropdown" style="position: relative; margin-right: 15px;">
+              <button class="wl-bell-btn" onclick="toggleNotificationMenu(event)" title="Notifications" aria-label="Notifications" style="position: relative;">
+                <i class="fa-regular fa-bell"></i>
+                <% if (typeof unreadCount !== 'undefined' && unreadCount > 0) { %>
+                  <span class="notification-badge" style="position: absolute; top: -2px; right: -4px; background: #ff385c; color: white; border-radius: 50%; width: 16px; height: 16px; font-size: 0.65rem; display: flex; align-items: center; justify-content: center; font-weight: bold;"><%= unreadCount %></span>
+                <% } %>
+              </button>
+              
+              <div class="wl-dropdown-menu notification-menu" id="notificationDropMenu" style="width: 300px; right: -50px; max-height: 400px; overflow-y: auto;">
+                <div class="wl-dropdown-header d-flex justify-content-between align-items-center">
+                  <span class="fw-bold">Notifications</span>
+                  <% if (typeof unreadCount !== 'undefined' && unreadCount > 0) { %>
+                    <button onclick="markNotificationsRead(event)" class="btn btn-sm text-primary" style="font-size: 0.8rem; background: none; border: none; padding: 0;">Mark all as read</button>
+                  <% } %>
+                </div>
+                <div class="wl-dropdown-divider"></div>
+                
+                <% if (typeof notifications !== 'undefined' && notifications.length > 0) { %>
+                  <% for (let notif of notifications) { %>
+                    <div class="wl-dropdown-item d-flex flex-column align-items-start <%= notif.isRead ? 'text-muted bg-transparent' : 'bg-light' %>" style="white-space: normal; padding: 10px 15px; border-bottom: 1px solid #f0f0f0; cursor: default;">
+                      <span class="<%= notif.isRead ? 'fw-normal' : 'fw-bold' %>" style="font-size: 0.9rem; line-height: 1.4;"><%= notif.message %></span>
+                      <small class="text-muted mt-1" style="font-size: 0.75rem;"><%= new Date(notif.createdAt).toLocaleString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true }) %></small>
+                    </div>
+                  <% } %>
+                <% } else { %>
+                  <div class="p-3 text-center text-muted" style="font-size: 0.9rem;">
+                    No notifications yet
+                  </div>
+                <% } %>
+              </div>
+            </div>
+
+            <!-- User Avatar Dropdown -->
+            <div class="wl-user-dropdown" id="userDropdown">
+              <button class="wl-avatar-btn" onclick="toggleUserMenu(event)" aria-label="User menu">
+                <span class="wl-avatar-circle">
+                  <%= currUser.username ? currUser.username[0].toUpperCase() : 'U' %>
+                </span>
+                <i class="fa-solid fa-chevron-down wl-avatar-chevron"></i>
+              </button>
+              <div class="wl-dropdown-menu" id="userDropMenu">
+                <div class="wl-dropdown-header">
+                  <span class="wl-dropdown-username">@<%= currUser.username %></span>
+                  <span class="wl-dropdown-email">
+                    <%= currUser.email || '' %>
+                  </span>
+                </div>
+                <div class="wl-dropdown-divider"></div>
+                <a class="wl-dropdown-item" href="/profile"><i class="fa-regular fa-user"></i> Profile</a>
+                <a class="wl-dropdown-item" href="/bookings/my"><i class="fa-regular fa-calendar-check"></i> My
+                  Bookings</a>
+                <a class="wl-dropdown-item" href="/listings/wishlist"><i class="fa-regular fa-heart"></i> Wishlist</a>
+                <a class="wl-dropdown-item" href="/listings/new"><i class="fa-solid fa-plus"></i> Add Listing</a>
+                <a class="wl-dropdown-item" href="/offer"><i class="fa-solid fa-tag"></i> Offers</a>
+                <div class="wl-dropdown-divider"></div>
+                <a class="wl-dropdown-item wl-dropdown-danger" href="/logout"><i
+                    class="fa-solid fa-right-from-bracket"></i> Log out</a>
+              </div>
+            </div>
+
+            <% } %>
+      </div>
+
+    </div>
+  </div>
+</nav>
+
+<script>
+  function toggleNotificationMenu(e) {
+    e.stopPropagation();
+    const menu = document.getElementById('notificationDropMenu');
+    const userMenu = document.getElementById('userDropMenu');
+    if (userMenu) userMenu.classList.remove('open'); // close user menu
+    menu.classList.toggle('open');
+  }
+
+  async function markNotificationsRead(e) {
+    e.stopPropagation();
+    try {
+      const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+      const csrfToken = csrfMeta ? csrfMeta.getAttribute("content") : "";
+      await fetch('/notifications/mark-read', {
+        method: 'POST',
+        headers: { 'CSRF-Token': csrfToken }
+      });
+      window.location.reload();
+    } catch(err) {
+      console.log(err);
+    }
+  }
+
+  function toggleUserMenu(e) {
+    e.stopPropagation();
+    const menu = document.getElementById('userDropMenu');
+    const btn = document.getElementById('userDropdown');
+    const notifMenu = document.getElementById('notificationDropMenu');
+    if (notifMenu) notifMenu.classList.remove('open'); // close notif menu
+
+    menu.classList.toggle('open');
+    btn.classList.toggle('active');
+  }
+
+  document.addEventListener('click', () => {
+    const menu = document.getElementById('userDropMenu');
+    const btn = document.getElementById('userDropdown');
+    const notifMenu = document.getElementById('notificationDropMenu');
+
+    if (menu) menu.classList.remove('open');
+    if (btn) btn.classList.remove('active');
+    if (notifMenu) notifMenu.classList.remove('open');
+  });
+</script>

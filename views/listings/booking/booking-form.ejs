@@ -1,0 +1,100 @@
+<% const minDate=new Date().toISOString().split("T")[0]; %>
+
+    <form action="/listings/<%= listing._id %>/bookings" method="POST" id="bookingForm">
+        <div class="row g-3">
+            <div class="col-md-3 booking-date-col">
+                <label for="checkIn" class="form-label">Check-in</label>
+                <input type="date" id="checkIn" name="booking[checkIn]" class="form-control" min="<%= minDate %>"
+                    required>
+            </div>
+            <div class="col-md-3 booking-date-col">
+                <label for="checkOut" class="form-label">Check-out</label>
+                <input type="date" id="checkOut" name="booking[checkOut]" class="form-control" min="<%= minDate %>"
+                    required>
+            </div>
+        </div>
+        <div class="row g-3 mt-1">
+            <div class="col-md-6 booking-guest-col">
+                <label class="form-label" for="guestPickerButton">Guests</label>
+                <div class="guest-picker" id="guestPicker">
+                    <button type="button" class="form-control guest-picker-trigger" id="guestPickerButton"
+                        aria-expanded="false" aria-controls="guestPopover">
+                        <span class="guest-trigger-copy">
+                            <span id="guestSummaryText" class="guest-trigger-title">Who</span>
+                            <small id="guestSummarySubtext" class="guest-trigger-subtext">Add guests</small>
+                        </span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="guest-popover d-none" id="guestPopover" role="dialog" aria-label="Guest picker">
+                        <div class="guest-row">
+                            <div>
+                                <p class="mb-0 fw-semibold">Adults</p>
+                                <small class="text-muted">Ages 13 or above</small>
+                            </div>
+                            <div class="guest-stepper" data-type="adults">
+                                <button type="button" class="guest-step-btn" data-action="decrease"
+                                    aria-label="Decrease adults">-</button>
+                                <span class="guest-count" id="adultsCount">1</span>
+                                <button type="button" class="guest-step-btn" data-action="increase"
+                                    aria-label="Increase adults">+</button>
+                            </div>
+                        </div>
+                        <div class="guest-row">
+                            <div>
+                                <p class="mb-0 fw-semibold">Children</p>
+                                <small class="text-muted">Ages 2-12</small>
+                            </div>
+                            <div class="guest-stepper" data-type="children">
+                                <button type="button" class="guest-step-btn" data-action="decrease"
+                                    aria-label="Decrease children">-</button>
+                                <span class="guest-count" id="childrenCount">0</span>
+                                <button type="button" class="guest-step-btn" data-action="increase"
+                                    aria-label="Increase children">+</button>
+                            </div>
+                        </div>
+                        <div class="guest-row">
+                            <div>
+                                <p class="mb-0 fw-semibold">Infants</p>
+                                <small class="text-muted">Under 2</small>
+                            </div>
+                            <div class="guest-stepper" data-type="infants">
+                                <button type="button" class="guest-step-btn" data-action="decrease"
+                                    aria-label="Decrease infants">-</button>
+                                <span class="guest-count" id="infantsCount">0</span>
+                                <button type="button" class="guest-step-btn" data-action="increase"
+                                    aria-label="Increase infants">+</button>
+                            </div>
+                        </div>
+                        <div class="guest-row border-0 pb-0 mb-0 <%= maxPets === 0 ? 'guest-row-disabled' : '' %>">
+                            <div>
+                                <p class="mb-0 fw-semibold">Pets</p>
+                                <small class="text-muted">
+                                    <%= maxPets===0 ? "Bringing a service animal?" : `Up to ${maxPets} pets allowed` %>
+                                </small>
+                            </div>
+                            <div class="guest-stepper" data-type="pets">
+                                <button type="button" class="guest-step-btn" data-action="decrease"
+                                    aria-label="Decrease pets" <%=maxPets===0 ? "disabled" : "" %>>-</button>
+                                <span class="guest-count" id="petsCount">0</span>
+                                <button type="button" class="guest-step-btn" data-action="increase"
+                                    aria-label="Increase pets" <%=maxPets===0 ? "disabled" : "" %>>+</button>
+                            </div>
+                        </div>
+                        <small class="text-muted d-block mt-2 guest-limit-note" id="guestLimitNote"></small>
+                        <button type="button" class="btn btn-link p-0 mt-2 guest-close-btn"
+                            id="guestPopoverClose">Close</button>
+                    </div>
+                </div>
+                <input type="hidden" id="bookingPeopleInput" name="booking[people]" value="1" required>
+                <input type="hidden" id="bookingKidsInput" name="booking[kids]" value="0" required>
+                <input type="hidden" id="bookingInfantsInput" name="booking[infants]" value="0" required>
+                <input type="hidden" id="bookingPetsInput" name="booking[pets]" value="0" required>
+            </div>
+            <div class="col-md-2 d-flex align-items-end booking-submit-col">
+                <button class="btn btn-dark pay-book-btn">Pay & Book</button>
+            </div>
+        </div>
+        <div class="col-12">
+            <small id="bookingDateError" class="text-danger d-none"></small>
+        </div>
+    </form>

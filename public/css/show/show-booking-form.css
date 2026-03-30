@@ -1,0 +1,248 @@
+.booking-submit-col .pay-book-btn {
+  white-space: nowrap;
+  width: 100%;
+  min-width: 138px;
+  text-align: center;
+}
+
+#bookingForm .booking-submit-col {
+  min-width: 145px;
+}
+
+.booking-policy-card {
+  border: 1px solid #dee2e6;
+  border-radius: 14px;
+  padding: 0.85rem 1rem;
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #f8f9fa 100%
+  );
+}
+
+.booking-policy-title {
+  font-weight: 700;
+}
+
+.booking-policy-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding-bottom: 0.45rem;
+  margin-bottom: 0.45rem;
+  border-bottom: 1px dashed #d8dadd;
+  font-size: 0.94rem;
+}
+
+.booking-policy-row span {
+  color: #5f6368;
+}
+
+.booking-policy-row b {
+  text-align: right;
+  font-weight: 600;
+}
+
+.guest-picker {
+  position: relative;
+}
+
+.guest-picker-trigger {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  text-align: left;
+  background: #fff;
+}
+
+.guest-trigger-copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+}
+
+.guest-trigger-title {
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.guest-trigger-subtext {
+  color: #6c757d;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.guest-picker-trigger i {
+  color: #6c757d;
+  font-size: 0.85rem;
+}
+
+.guest-popover {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  width: min(360px, 95vw);
+  z-index: 20;
+  background: #fff;
+  border: 1px solid #d9dde3;
+  border-radius: 16px;
+  box-shadow: 0 18px 34px rgba(16, 24, 40, 0.14);
+  padding: 0.95rem;
+}
+
+.guest-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid #eceef2;
+}
+
+.guest-row-disabled {
+  opacity: 0.72;
+}
+
+.guest-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.guest-step-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #c9cfd8;
+  background: #fff;
+  color: #212529;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.guest-step-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.guest-count {
+  min-width: 24px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.guest-limit-note {
+  line-height: 1.35;
+}
+
+.guest-close-btn {
+  font-size: 0.9rem;
+  color: #222;
+  text-decoration: underline;
+}
+
+.guest-close-btn:hover {
+  color: #000;
+}
+
+@media (max-width: 767px) {
+  .booking-submit-col .pay-book-btn {
+    width: auto;
+    min-width: 130px;
+  }
+}
+
+#bookingForm .form-label {
+  display: block;
+  line-height: 1.2 !important;
+  margin-bottom: 0.35rem;
+}
+
+#bookingForm input[type="date"] {
+  width: 100%;
+  min-width: 160px;
+  font-size: 0.95rem;
+  color: #212529;
+}
+
+#bookingForm .booking-guest-col select {
+  width: 100%;
+  min-width: 120px;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 767px) {
+  .guest-popover {
+    width: 100%;
+    left: 0;
+    right: 0;
+  }
+}
+
+@media (max-width: 575px) {
+  #bookingForm .booking-date-col,
+  #bookingForm .booking-guest-col,
+  #bookingForm .booking-submit-col {
+    min-width: 100%;
+    flex: 1 1 100%;
+  }
+
+  .booking-policy-row.border-0 b {
+    padding-right: 1.5rem;
+  }
+
+  .booking-policy-row.border-0 b {
+    padding-right: 0.35rem;
+  }
+}
+
+#bookingForm input[type="date"]::-webkit-datetime-edit,
+#bookingForm input[type="date"]::-webkit-datetime-edit-text,
+#bookingForm
+  input[type="date"]::-webkit-datetime-edit-day-field,
+#bookingForm
+  input[type="date"]::-webkit-datetime-edit-month-field,
+#bookingForm
+  input[type="date"]::-webkit-datetime-edit-year-field {
+  color: #212529;
+  opacity: 1;
+}
+
+#bookingForm .row.g-3 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+#bookingForm .booking-date-col {
+  min-width: 160px;
+  flex: 1 1 160px;
+}
+
+#bookingForm .booking-date-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+#bookingForm .booking-date-col input[type="date"] {
+  width: 100%;
+}
+
+@media (max-width: 767px) {
+  #bookingForm .row.g-3 {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  #bookingForm .booking-date-col {
+    min-width: 100%;
+    flex: 1 1 100%;
+    align-items: stretch;
+  }
+}

@@ -1,0 +1,93 @@
+<footer class="site-footer">
+
+  <div class="footer-multicol">
+
+    <!-- 1️⃣ Column -->
+    <div class="footer-about">
+      <div class="footer-brand">
+        <i class="fa-solid fa-compass"></i>
+        <span>Wanderlust</span>
+      </div>
+
+      <p class="footer-tagline">
+        Your trusted platform for discovering and booking unique stays.
+      </p>
+
+      <!-- Social -->
+       <p class="connect-socials">Follow us on social media</p>
+      <div class="footer-socials">
+        <a href="https://www.facebook.com/share/1B7s4ErVpU/"><i class="fa-brands fa-square-facebook"></i></a>
+        <a href="https://www.instagram.com/pankajtechofficial"><i class="fa-brands fa-square-instagram"></i></a>
+        <a href="https://www.linkedin.com/in/pankaj-singh-04a9b6220/"><i class="fa-brands fa-linkedin"></i></a>
+      </div>
+    </div>
+
+    <!-- 2️⃣ Column -->
+    <div class="footer-links">
+      <div class="footer-section-title">Quick Links</div>
+      <ul>
+        <li><a href="/"><i class="fa-solid fa-house-chimney"></i> Home</a></li>
+        <li><a href="/offer"><i class="fa-solid fa-tag"></i> Offers</a></li>
+        <li><a href="/bookings/my"><i class="fa-regular fa-calendar-check"></i> My Bookings</a></li>
+        <li><a href="/help"><i class="fa-solid fa-circle-question"></i> Help Center</a></li>
+      </ul>
+    </div>
+
+    <!-- 3️⃣ Column -->
+    <div class="footer-links">
+      <div class="footer-section-title">Support</div>
+      <ul>
+        <li><a href="/privacy"><i class="fa-solid fa-shield-halved"></i> Privacy Policy</a></li>
+        <li><a href="/terms"><i class="fa-solid fa-file-contract"></i> Terms of Service</a></li>
+        <li><a href="/contact"><i class="fa-solid fa-envelope"></i> Contact Us</a></li>
+        <li><a href="/report"><i class="fa-solid fa-flag"></i> Report Issue</a></li>
+      </ul>
+    </div>
+
+    <!-- 4️⃣ Column -->
+    <div class="footer-connect">
+      <div class="footer-section-title">Stay Updated</div>
+
+      <form class="footer-newsletter" action="/subscribe" method="POST">
+        <input type="email" name="email" placeholder="Enter your email..." required />
+        <button type="submit">
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </form>
+
+      <p style="font-size:0.8rem; color:#666; margin-bottom:0.7rem;">
+        Get exclusive deals & new listings in your inbox.
+      </p>
+
+      <div class="footer-dev-row">
+        <img src="https://res.cloudinary.com/dxn4y5zlg/image/upload/v1773248409/Screenshot_20260118-075954_3_vrp14n.jpg"
+          alt="Pankaj" class="footer-avatar" />
+        <span class="footer-dev-credit">Developed by Pankaj</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 🔥 NEW BOTTOM ROW -->
+  <div class="footer-bottom">
+    <div class="footer-copyright">
+      &copy; <%= new Date().getFullYear() %> Wanderlust Private Limited. All rights reserved.
+    </div>
+  </div>
+
+</footer>
+
+<!-- Back to Top Button -->
+<button id="backToTop" aria-label="Back to top" title="Back to top">
+  <i class="fa-solid fa-chevron-up"></i>
+</button>
+
+<script>
+  const backToTopBtn = document.getElementById('backToTop');
+  window.addEventListener('scroll', () => {
+    backToTopBtn.classList.toggle('visible', window.scrollY > 300);
+  });
+  backToTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>

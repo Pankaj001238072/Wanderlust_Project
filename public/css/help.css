@@ -1,0 +1,151 @@
+/* page wrapper */
+
+.help {
+  padding: 45px 15px 55px;
+}
+
+/* container width */
+
+.help-container {
+  max-width: 1100px;
+}
+
+
+/* header */
+
+.help-header {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.help-icon {
+  font-size: 34px;
+  color: #fe424d;
+  margin-bottom: 10px;
+}
+
+.help-title {
+  font-weight: 650;
+  margin-bottom: 4px;
+}
+
+.help-subtitle {
+  color: #6b7280;
+  font-size: 15px;
+}
+
+
+/* layout */
+
+.help-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 22px;
+}
+
+
+/* faq card */
+
+.faq-card {
+  background: #fff;
+  padding: 22px;
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+}
+
+.faq-heading {
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+
+.faq-heading i {
+  color: #fe424d;
+  margin-right: 6px;
+}
+
+
+/* support card */
+
+.support-card {
+  background: #fff;
+  padding: 28px 22px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+}
+
+.support-icon {
+  font-size: 38px;
+  color: #fe424d;
+  margin-bottom: 10px;
+}
+
+.support-card p {
+  color: #6b7280;
+  margin-bottom: 18px;
+}
+
+.support-btn {
+  padding: 9px 18px;
+}
+
+
+/* accordion */
+
+.accordion-button {
+  font-weight: 500;
+}
+
+.accordion-button:not(.collapsed) {
+  background: #fff5f5;
+  color: #fe424d;
+}
+
+
+/* tablet */
+
+@media (max-width: 992px) {
+
+.help-layout {
+  grid-template-columns: 1fr;
+}
+
+.support-card {
+  margin-top: 10px;
+}
+
+}
+
+
+/* mobile */
+
+@media (max-width: 600px) {
+
+.help {
+  padding: 35px 12px;
+}
+
+.help-title {
+  font-size: 26px;
+}
+
+.support-btn {
+  width: 100%;
+}
+
+}
+
+
+/* small mobile */
+
+@media (max-width: 400px) {
+
+.help-title {
+  font-size: 22px;
+}
+
+.help-subtitle {
+  font-size: 14px;
+}
+
+}

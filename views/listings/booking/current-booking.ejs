@@ -1,0 +1,35 @@
+<% if (currentUserBooking) { %>
+    <div class="alert alert-success" role="alert">
+        Your booking is confirmed from
+        <b>
+            <%= new Date(currentUserBooking.checkIn).toLocaleDateString("en-IN") %>
+        </b>
+        to
+        <b>
+            <%= new Date(currentUserBooking.checkOut).toLocaleDateString("en-IN") %>
+        </b>
+        (Total: &#8377;<%= currentUserBooking.totalPrice.toLocaleString("en-IN") %>)
+            <br />
+            <small class="text-muted">
+                People: <%= currentUserBooking.people ?? "-" %>
+                    | Kids: <%= currentUserBooking.kids ?? 0 %>
+                        | Infants: <%= currentUserBooking.infants ?? 0 %>
+                            | Pets: <%= currentUserBooking.pets ?? 0 %>
+            </small>
+    </div>
+
+    <% const nowBookingCheck=new Date(); %>
+        <% const bookingCheckInDate=new Date(currentUserBooking.checkIn); %>
+            <% const bookingCreatedAt=new Date(currentUserBooking.createdAt); %>
+                <% const graceWindowEndsAt=new Date(bookingCreatedAt.getTime() + (30 * 60 * 1000)); %>
+                    <% const checkInCutoffAt=new Date(bookingCheckInDate.getTime() - (2 * 60 * 60 * 1000)); %>
+                        <% const canCancelCurrentBooking=nowBookingCheck <=graceWindowEndsAt || nowBookingCheck
+                            <=checkInCutoffAt; %>
+
+                            <% if (canCancelCurrentBooking) { %>
+                                <form method="POST" action="/bookings/<%= currentUserBooking._id %>?_method=DELETE"
+                                    class="mb-3">
+                                    <button class="btn btn-outline-danger btn-sm">Cancel booking</button>
+                                </form>
+                                <% } %>
+                                    <% } %>

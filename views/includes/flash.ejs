@@ -1,0 +1,17 @@
+<% if (typeof success !=='undefined' && success && success.length> 0) { %>
+    <div class="flash-wrapper">
+        <div class="alert alert-success alert-dismissible fade show flash-alert" role="alert">
+            <%= success %> <!-- Displaying the success flash message -->
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+    <% } %>
+
+        <% if (typeof error !=='undefined' && error && error.length> 0) { %>
+            <div class="flash-wrapper">
+                <div class="alert alert-danger alert-dismissible fade show flash-alert" role="alert">
+                    <%= error %> <!-- Displaying the error flash message -->
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+            <% } %>

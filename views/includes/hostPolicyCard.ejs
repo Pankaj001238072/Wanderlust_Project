@@ -1,0 +1,101 @@
+<% const initialBaseGuests=Number(baseGuests ?? 2); const initialMaxKids=Number(maxKids ?? 2); const
+    initialMaxInfants=Number(maxInfants ?? 0); const initialMaxPets=Number(maxPets ?? 0); const
+    initialMaxGuests=Number(maxGuests ?? initialBaseGuests + initialMaxKids); const
+    initialFee=Number(extraGuestFeePerNight ?? 0); %>
+
+    <div class="card p-3 mb-3 host-policy-card" id="hostPolicyCard" data-base-guests="<%= initialBaseGuests %>"
+        data-max-kids="<%= initialMaxKids %>" data-max-infants="<%= initialMaxInfants %>"
+        data-max-pets="<%= initialMaxPets %>">
+        <h5 class="mb-2">Guest & Pet Policy</h5>
+
+        <div class="host-policy-row">
+            <div>
+                <p class="mb-0 fw-semibold">Adults</p>
+                <small class="text-muted">Ages 13 or above</small>
+            </div>
+            <div class="host-policy-stepper" data-type="baseGuests">
+                <button type="button" class="host-policy-step-btn" data-action="decrease"
+                    aria-label="Decrease base guests">-</button>
+                <span class="host-policy-count" id="baseGuestsCount">
+                    <%= initialBaseGuests %>
+                </span>
+                <button type="button" class="host-policy-step-btn" data-action="increase"
+                    aria-label="Increase base guests">+</button>
+            </div>
+        </div>
+
+        <div class="host-policy-row">
+            <div>
+                <p class="mb-0 fw-semibold">Children</p>
+                <small class="text-muted">Ages 2-12</small>
+            </div>
+            <div class="host-policy-stepper" data-type="maxKids">
+                <button type="button" class="host-policy-step-btn" data-action="decrease"
+                    aria-label="Decrease max kids">-</button>
+                <span class="host-policy-count" id="maxKidsCount">
+                    <%= initialMaxKids %>
+                </span>
+                <button type="button" class="host-policy-step-btn" data-action="increase"
+                    aria-label="Increase max kids">+</button>
+            </div>
+        </div>
+
+        <div class="host-policy-row">
+            <div>
+                <p class="mb-0 fw-semibold">Infants</p>
+                <small class="text-muted">Under 2</small>
+            </div>
+            <div class="host-policy-stepper" data-type="maxInfants">
+                <button type="button" class="host-policy-step-btn" data-action="decrease"
+                    aria-label="Decrease infants">-</button>
+                <span class="host-policy-count" id="maxInfantsCount">
+                    <%= initialMaxInfants %>
+                </span>
+                <button type="button" class="host-policy-step-btn" data-action="increase"
+                    aria-label="Increase infants">+</button>
+            </div>
+        </div>
+
+        <div class="host-policy-row">
+            <div>
+                <p class="mb-0 fw-semibold">Pets</p>
+                <small class="text-muted" id="maxPetsHelperText">
+                    <%= initialMaxPets===0 ? "Bringing a service animal?" : `Up to ${initialMaxPets} pets allowed` %>
+                </small>
+            </div>
+            <div class="host-policy-stepper" data-type="maxPets">
+                <button type="button" class="host-policy-step-btn" data-action="decrease"
+                    aria-label="Decrease max pets">-</button>
+                <span class="host-policy-count" id="maxPetsCount">
+                    <%= initialMaxPets %>
+                </span>
+                <button type="button" class="host-policy-step-btn" data-action="increase"
+                    aria-label="Increase max pets">+</button>
+            </div>
+        </div>
+
+        <div class="host-policy-row border-0 pb-0 mb-0">
+            <div>
+                <p class="mb-0 fw-semibold">Guests (auto)</p>
+                <small class="text-muted">Adults + Children</small>
+            </div>
+            <b id="maxGuestsPreview">
+                <%= initialMaxGuests %>
+            </b>
+        </div>
+
+        <small class="text-muted d-block mt-2" id="hostPolicyLimitNote"></small>
+
+        <div class="mt-3">
+            <label for="extraGuestFeePerNight" class="form-label">Extra guest fee per night (after base guests)</label>
+            <input name="listing[extraGuestFeePerNight]" id="extraGuestFeePerNight" type="number" class="form-control"
+                min="0" value="<%= initialFee %>" required>
+            <small class="text-muted">Example: base 2, max 4, fee 500 -> extra 2 guests x 500 per night.</small>
+        </div>
+
+        <input type="hidden" name="listing[baseGuests]" id="baseGuestsInput" value="<%= initialBaseGuests %>" required>
+        <input type="hidden" name="listing[maxGuests]" id="maxGuestsInput" value="<%= initialMaxGuests %>" required>
+        <input type="hidden" name="listing[maxKids]" id="maxKidsInput" value="<%= initialMaxKids %>" required>
+        <input type="hidden" name="listing[maxInfants]" id="maxInfantsInput" value="<%= initialMaxInfants %>" required>
+        <input type="hidden" name="listing[maxPets]" id="maxPetsInput" value="<%= initialMaxPets %>" required>
+    </div>

@@ -1,0 +1,72 @@
+<% layout("/layouts/boilerplate") %>
+
+    <div class="contact-wrapper">
+        <div class="contact-form">
+            <div class="contact-title">
+                <i class="fa-solid fa-envelope" style="color:#ff385c;margin-right:8px;"></i> Contact Us
+            </div>
+            <p style="text-align:center;color:#555;margin-bottom:1.2rem;font-size:1.05rem;">Have a question, suggestion,
+                or feedback? Please fill out the form below and our team will respond to you soon.</p>
+            <form action="/contact" method="POST">
+                <input type="text" name="name" placeholder="Your name" required style="font-weight:500;" autofocus>
+                <input type="email" name="email" placeholder="Your email (e.g. you@gmail.com)" required style="font-weight:500;"
+                    pattern="^[a-zA-Z0-9._%+-]+@gmail\.com$">
+                <textarea name="message" placeholder="Your message" required style="font-weight:500;"></textarea>
+                <!-- Google reCAPTCHA widget -->
+                <div style="margin:0.2rem 0;text-align:center;">
+                    <div class="g-recaptcha" data-sitekey="<%= recaptchaSiteKey %>"></div>
+                </div>
+                <button type="submit" id="contactSubmitBtn"><i class="fa-solid fa-paper-plane" style="margin-right:6px;"></i>Send
+                    Message</button>
+            </form>
+            <div style="margin-top:1rem;text-align:center;color:#888;font-size:0.95rem;">
+                <i class="fa-solid fa-lock" style="color:#bbb;margin-right:6px;"></i> Your information is safe and
+                confidential.
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+    <script>
+        const contactForm = document.querySelector('form[action="/contact"]');
+        const contactBtn = document.getElementById("contactSubmitBtn");
+
+        contactForm.addEventListener("submit", function (e) {
+            const captcha = grecaptcha.getResponse();
+
+            // ❌ captcha not done
+            if (!captcha) {
+                e.preventDefault();
+
+                const old = document.getElementById("contact-captcha-error");
+                if (old) old.remove();
+
+                // show error
+                const msg = document.createElement("div");
+                msg.id = "contact-captcha-error";
+                msg.innerText = "⚠ Please complete the CAPTCHA first";
+                msg.style.color = "red";
+                msg.style.textAlign = "center";
+                msg.style.marginTop = "0px";
+                msg.style.marginBottom = "-0.5rem"; // additional negative margin to pull the "safe" text closer
+
+                contactForm.appendChild(msg);
+                return;
+            }
+
+            // ✅ only when valid
+            contactBtn.innerHTML = "Sending...";
+            contactBtn.disabled = true;
+        });
+
+        // reset button (back/reload fix) — only reset CAPTCHA on back navigation, not fresh load
+        window.addEventListener("pageshow", function (event) {
+            contactBtn.disabled = false;
+            contactBtn.innerHTML = '<i class="fa-solid fa-paper-plane" style="margin-right:6px;"></i>Send Message';
+
+            if (event.persisted && typeof grecaptcha !== 'undefined') {
+                grecaptcha.reset();
+            }
+        });
+    </script>

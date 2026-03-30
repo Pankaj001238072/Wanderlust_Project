@@ -1,0 +1,128 @@
+/* Page spacing */
+.contact-wrapper {
+  max-width: 480px;
+  margin: 2rem auto;
+  padding: 0 0.5rem;
+}
+
+/* Form card */
+.contact-form {
+  background: #ffffff;
+  padding: 1.2rem 0.8rem;
+  border-radius: 14px;
+  border: 1px solid #e6e6e6;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.06);
+}
+
+/* Title */
+.contact-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #222;
+}
+
+/* Form layout */
+.contact-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+/* Inputs */
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 0.5rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid #d9d9d9;
+  font-size: 0.95rem;
+  outline: none;
+  transition:
+    border 0.2s ease,
+    box-shadow 0.2s ease;
+  background: #fafafa;
+  cursor: text;
+}
+
+/* Focus state */
+.contact-form input:focus,
+.contact-form textarea:focus {
+  border-color: #ff385c;
+  box-shadow: 0 0 0 3px rgba(255, 56, 92, 0.15);
+  background: #fff;
+}
+
+/* Textarea */
+.contact-form textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* Button */
+.contact-form button {
+  margin-top: 0.2rem;
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: none;
+  background: #ff385c;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Hover */
+.contact-form button:hover {
+  background: #e03150;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(255, 56, 92, 0.25);
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+  .contact-wrapper {
+    margin: 1.2rem auto;
+  }
+
+  .contact-form {
+    padding: 1rem 0.6rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .contact-wrapper {
+    margin: 0.8rem auto;
+  }
+
+  .contact-title {
+    font-size: 1.1rem;
+  }
+
+  .contact-form {
+    padding: 0.7rem 0.3rem;
+  }
+
+  .g-recaptcha {
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+    max-width: 320px;
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  @media (max-width: 480px) {
+    .g-recaptcha {
+      transform: scale(0.8);
+      transform-origin: center;
+      margin: 0 auto;
+      max-width: 320px;
+      width: 100%;
+      overflow-x: hidden;
+    }
+  }
+}

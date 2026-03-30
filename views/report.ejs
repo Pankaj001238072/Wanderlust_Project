@@ -1,0 +1,80 @@
+<% layout("/layouts/boilerplate") %>
+
+  <div class="contact-wrapper" style="margin-top:2rem;margin-bottom:2rem;">
+    <div class="contact-form">
+
+      <div class="contact-title">
+        <i class="fa-solid fa-flag" style="color:#ff385c;margin-right:8px;"></i> Report an Issue
+      </div>
+
+      <p style="text-align:center;color:#555;margin-bottom:1rem;font-size:1.05rem;">
+        If you found misuse, fraud, or any issue, please fill out this form.
+      </p>
+
+      <form id="reportForm" action="/report" method="POST">
+
+        <input type="text" name="reason" placeholder="Reason (e.g. Fraud, Abuse)" required>
+
+        <textarea name="description" placeholder="Describe the issue" required></textarea>
+
+        <input type="email" name="email" placeholder="Your email (optional)" pattern="^[a-zA-Z0-9._%+-]+@gmail\.com$">
+
+        <!-- CAPTCHA -->
+        <div style="margin:0.2rem 0;text-align:center;">
+          <div class="g-recaptcha" data-sitekey="<%= recaptchaSiteKey %>"></div>
+        </div>
+
+        <button type="submit" id="submitBtn">
+          <i class="fa-solid fa-paper-plane"></i> Submit Report
+        </button>
+
+      </form>
+
+    </div>
+  </div>
+
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+
+  <script>
+    const form = document.getElementById("reportForm");
+    const btn = document.getElementById("submitBtn");
+
+    form.addEventListener("submit", function (e) {
+      const captcha = grecaptcha.getResponse();
+
+      // ❌ captcha not done
+      if (!captcha) {
+        e.preventDefault();
+
+
+        const old = document.getElementById("captcha-error");
+        if (old) old.remove();
+
+        // show error
+        const msg = document.createElement("div");
+        msg.id = "captcha-error";
+        msg.innerText = "⚠ Please complete the CAPTCHA first";
+        msg.style.color = "red";
+        msg.style.textAlign = "center";
+        msg.style.marginTop = "10px";
+
+        form.appendChild(msg);
+        return;
+      }
+
+      // ✅ only when valid
+      btn.innerText = "Submitting...";
+      btn.disabled = true;
+    });
+
+    // reset button (back/reload fix) — only reset CAPTCHA on back navigation, not fresh load
+    window.addEventListener("pageshow", function (event) {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit Report';
+
+      if (event.persisted && typeof grecaptcha !== 'undefined') {
+        grecaptcha.reset();
+      }
+    });
+  </script>

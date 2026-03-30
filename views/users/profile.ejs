@@ -1,0 +1,64 @@
+<% layout("/layouts/boilerplate") %>
+
+    <div class="main-bg-gradient"
+        style="padding-top: 2vw; padding-bottom: 4vw; margin-bottom: 0; padding-left: 3vw; padding-right: 3vw; display: flex; align-items: flex-start; justify-content: center;">
+        <div class="container" style="padding-bottom: 0; margin-bottom: 0;">
+            <div class="row justify-content-center" style="padding-bottom: 0; margin-bottom: 0;">
+                <div class="col-md-7 col-lg-6" style="padding-bottom: 0; margin-bottom: 0;">
+                    <div class="profile-hotel-card mx-auto"
+                        style="max-width: 480px; padding: 1.2rem 2rem 1.2rem 2rem; margin-bottom: 0;">
+                        <div class="text-center">
+                            <div class="d-flex flex-column align-items-center justify-content-center mb-3"
+                                style="min-height: 100px;">
+                                <div class="profile-photo-wrapper mb-2">
+                                    <% if (user.photo) { %>
+                                        <img src="<%= user.photo %>" alt="Profile Photo"
+                                            class="rounded-circle airbnb-profile-photo">
+                                        <% } else { %>
+                                            <div
+                                                class="default-user-icon d-flex align-items-center justify-content-center">
+                                                <i class="fa fa-user" style="font-size:3.5rem;color:#b0b8c1;"></i>
+                                            </div>
+                                            <% } %>
+                                </div>
+                                <h3 class="mb-1 text-center"
+                                    style="font-weight: 700; color: #222; letter-spacing: 0.5px;">Hi, I'm <span
+                                        style="color:#FE424D">
+                                        <%= user.username %>
+                                    </span></h3>
+                                <div class="mb-2 text-muted text-center" style="font-size:1.08rem;">Welcome to your
+                                    Wanderlust profile</div>
+                            </div>
+                            <div class="hotel-profile-info mb-2 px-2 px-md-4">
+                                <div class="hotel-info-item d-flex align-items-center"
+                                    style="gap:0.5rem; flex-wrap:wrap;">
+                                    <span
+                                        style="display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: #fbeaec; border-radius: 50%;"><i
+                                            class="fa fa-envelope" style="color:#FE424D; font-size:1.1rem;"></i></span>
+                                    <span style="word-break:break-all;">
+                                        <%= user.email %>
+                                    </span>
+                                </div>
+                                <% if (user.phone) { %>
+                                    <div class="hotel-info-item d-flex align-items-center"
+                                        style="gap:0.5rem; flex-wrap:wrap;">
+                                        <span
+                                            style="display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: #fbeaec; border-radius: 50%;"><i
+                                                class="fa fa-phone" style="color:#FE424D; font-size:1.1rem;"></i></span>
+                                        <span style="word-break:break-all;">
+                                            <%= user.phone %>
+                                        </span>
+                                    </div>
+                                    <% } %>
+                            </div>
+                            <div class="profile-btns justify-content-center flex-wrap">
+                                <a href="/profile/edit" class="btn btn-outline-hotel">Edit Profile</a>
+                                <a href="/bookings/my" class="btn btn-hotel-main">My Bookings</a>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

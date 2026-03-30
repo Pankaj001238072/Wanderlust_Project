@@ -1,0 +1,47 @@
+<% layout("/layouts/boilerplate") %>
+    <link rel="stylesheet" href="/css/offer.css">
+
+    <div style="max-width: 800px; margin: 0 auto; padding: 30px 0;">
+        <h1 style="text-align: center; margin-bottom: 30px;">Current Offers</h1>
+        <div style="text-align: center; margin-bottom: 30px;">
+            <a href="/offer/new" class="btn btn-primary"
+                style="padding: 10px 24px; font-size: 18px; border-radius: 6px; background: #ff385c; color: #fff; text-decoration: none;">Create
+                New Offer</a>
+        </div>
+        <% if (offers.length===0) { %>
+            <div style="text-align: center; color: #888; font-size: 20px; margin-top: 40px;">No offers available right
+                now.</div>
+            <% } else { %>
+                <div style="display: flex; flex-wrap: wrap; gap: 24px; justify-content: center;">
+                    <% offers.forEach(offer=> { %>
+                        <div
+                            style="background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 24px; width: 320px; position: relative;">
+                            <h2 style="color: #ff385c; margin-bottom: 12px; font-size: 22px;">
+                                <%= offer.listing ? offer.listing.title : offer.title %>
+                            </h2>
+                            <p style="margin-bottom: 10px; color: #333; font-size: 16px;">
+                                <%= offer.listing ? offer.listing.description : offer.description %>
+                            </p>
+                            <div style="margin-bottom: 8px; font-weight: bold; color: #28a745;">Discount: <%=
+                                    offer.discount %>%</div>
+                            <div style="color: #555; font-size: 15px;">Valid Till: <%= offer.validTill.toDateString() %>
+                            </div>
+                            <div style="margin-top: 16px;">
+                                <% if (offer.listing) { %>
+                                    <a href="/listings/<%= offer.listing._id %>" class="btn-view-listing-offer"
+                                        style="margin-right:8px; padding: 8px 16px; border-radius: 10px; font-size: 15px; cursor: pointer;">View
+                                        Listing</a>
+                                    <% } %>
+                                        <% if (currUser && offer.owner && offer.owner.equals(currUser._id)) { %>
+                                            <form action="/offer/<%= offer._id %>/delete" method="POST"
+                                                style="display:inline;">
+                                                <button type="submit" class="btn-delete-offer"
+                                                    style="padding: 6px 15px; border-radius: 10px; font-size: 15px; cursor: pointer;">Delete</button>
+                                            </form>
+                                            <% } %>
+                            </div>
+                        </div>
+                        <% }) %>
+                </div>
+                <% } %>
+    </div>

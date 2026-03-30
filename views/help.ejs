@@ -1,0 +1,104 @@
+<link rel="stylesheet" href="/css/help.css">
+
+<% layout("/layouts/boilerplate") %>
+
+<section class="help">
+
+  <div class="container help-container">
+
+    <!-- Header -->
+    <div class="help-header">
+      <i class="fa-solid fa-circle-question help-icon"></i>
+      <h1 class="help-title">Help Center</h1>
+      <p class="help-subtitle">
+        Find answers to common questions or contact our support team.
+      </p>
+    </div>
+
+    <div class="help-layout">
+
+      <!-- FAQ -->
+      <div class="faq-card">
+
+        <h4 class="faq-heading">
+          <i class="fa-solid fa-question-circle"></i>
+          Frequently Asked Questions
+        </h4>
+
+        <div class="accordion" id="faqAccordion">
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#faq1">
+                How do I book a stay?
+              </button>
+            </h2>
+
+            <div id="faq1" class="accordion-collapse collapse show">
+              <div class="accordion-body">
+                Browse listings, choose dates, and complete checkout.
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#faq2">
+                How do I contact support?
+              </button>
+            </h2>
+
+            <div id="faq2" class="accordion-collapse collapse">
+              <div class="accordion-body">
+                Visit the <a href="/contact">Contact page</a> to reach our team.
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#faq3">
+                How do I cancel a booking?
+              </button>
+            </h2>
+
+            <div id="faq3" class="accordion-collapse collapse">
+              <div class="accordion-body">
+                Go to <a href="/bookings/my">My Bookings</a> and cancel.
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- Support Card -->
+      <div class="support-card">
+
+        <i class="fa-solid fa-headset support-icon"></i>
+
+        <h5>Need more help?</h5>
+
+        <p>
+          If you still have questions our support team is ready to help.
+        </p>
+
+        <a href="/contact" class="btn btn-danger support-btn">
+          Contact Support
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>

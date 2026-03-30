@@ -1,0 +1,64 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="row mt-2 signup-page">
+  <div class="col-12 col-md-6 offset-md-3 signup-form-wrap signup-card">
+
+    <div class="auth-brand text-center">
+      <i class="fa-solid fa-compass"></i>
+      <span>Wanderlust</span>
+    </div>
+
+    <h2 class="auth-title text-center">Create account</h2>
+    <p class="auth-sub text-center">
+      Create account with Wanderlust and explore amazing stays
+    </p>
+
+    <form action="/signup" method="POST" class="needs-validation" novalidate>
+
+      <script src="/js/signup-captcha.js"></script>
+
+      <!-- Username -->
+      <div class="mb-2">
+        <label class="form-label">Username</label>
+        <div class="input-wrap">
+          <i class="fa-regular fa-user"></i>
+          <input name="username" type="text" class="form-control"
+            placeholder="Choose a username" minlength="3" required />
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="mb-2">
+        <label class="form-label">Email</label>
+        <div class="input-wrap">
+          <i class="fa-regular fa-envelope"></i>
+          <input name="email" type="email" class="form-control"
+            placeholder="your@gmail.com" required />
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="mb-2">
+        <label class="form-label">Password</label>
+        <div class="input-wrap">
+          <i class="fa-solid fa-lock"></i>
+          <input name="password" type="password" class="form-control"
+            placeholder="Min. 4 characters" minlength="4" required />
+        </div>
+      </div>
+
+      <!-- CAPTCHA -->
+      <div class="captcha-wrap"></div>
+
+      <button class="btn auth-btn w-100">
+        <i class="fa-solid fa-user-plus"></i> Create Account
+      </button>
+
+    </form>
+
+    <p class="auth-switch text-center">
+      Already have an account? <a href="/login">Log in</a>
+    </p>
+
+  </div>
+</div>

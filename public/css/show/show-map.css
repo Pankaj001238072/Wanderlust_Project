@@ -1,0 +1,16 @@
+#map {
+  height: clamp(240px, 38vh, 380px);
+  width: var(--show-frame-width) !important;
+  max-width: var(--show-media-width);
+  margin-top: 0.5rem;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 12px;
+}
+
+@media (max-width: 575px) {
+  #map {
+    height: clamp(210px, 30vh, 250px);
+    margin-top: 0.4rem;
+  }
+}

@@ -1,0 +1,50 @@
+.checkout-payment-card .card-body {
+  padding: 0.5rem 0.65rem !important;
+}
+
+.checkout-payment-card h5 {
+  margin-bottom: 0.4rem !important;
+}
+
+.checkout-payment-note {
+  font-size: 0.92rem;
+  margin-bottom: 0.35rem !important;
+}
+
+.checkout-payment-card #payment-element {
+  padding: 0.35rem;
+  border: 1px solid #ebebeb;
+  border-radius: 0.8rem;
+  background: #fff;
+}
+
+.checkout-payment-card #submit-payment {
+  border-radius: 0.75rem;
+  font-weight: 600;
+  padding: 0.5rem 0.8rem;
+  margin-top: 0.35rem !important;
+}
+
+.checkout-payment-card #payment-message {
+  margin-top: 0.2rem !important;
+}
+
+.checkout-payment-card form {
+  margin-bottom: 0;
+}
+
+.checkout-payment-card form + form button {
+  margin-top: 0.25rem !important;
+  padding-top: 0.48rem;
+  padding-bottom: 0.48rem;
+}
+
+@media (max-width: 575px) {
+  .checkout-payment-card .card-body {
+    padding: 0.48rem 0.58rem !important;
+  }
+
+  .checkout-payment-card #payment-element {
+    padding: 0.3rem;
+  }
+}

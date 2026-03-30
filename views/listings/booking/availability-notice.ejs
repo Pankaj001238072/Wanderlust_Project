@@ -1,0 +1,18 @@
+<% if (bookedDateRanges && bookedDateRanges.length> 0) { %>
+    <div class="alert alert-warning py-2" role="alert">
+        <b>Unavailable dates:</b>
+        <ul class="mb-0 mt-2">
+            <% for (let dateRange of bookedDateRanges) { %>
+                <li>
+                    <%= new Date(dateRange.checkIn).toLocaleDateString("en-IN") %>
+                        -
+                        <%= new Date(dateRange.checkOut).toLocaleDateString("en-IN") %>
+                </li>
+                <% } %>
+        </ul>
+
+        <small class="d-block mt-1">Available dates are not in the above ranges.</small>
+    </div>
+    <% } else { %>
+        <p class="text-success mb-2">Currently all upcoming dates are available.</p>
+        <% } %>

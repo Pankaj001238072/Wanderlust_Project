@@ -1,0 +1,89 @@
+@media (max-width: 600px) {
+  .host-policy-row {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid #eceef2;
+  }
+  .host-policy-stepper {
+    width: auto;
+    justify-content: flex-start;
+    gap: 0.4rem;
+  }
+  .host-policy-step-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 1rem;
+  }
+  .host-policy-count {
+    font-size: 1rem;
+    min-width: 32px;
+    text-align: center;
+  }
+}
+textarea.form-control {
+  overflow-y: hidden;
+}
+
+.add-btn {
+  background-color: #fe424d !important;
+  bottom: none !important;
+}
+
+.edit-btn {
+  background-color: #fe424d !important;
+  bottom: none !important;
+}
+
+.form-label {
+  line-height: 1.2 !important;
+}
+
+.comment-label {
+  margin-top: 0;
+  display: block;
+}
+
+.host-policy-card {
+  border-radius: 14px;
+}
+
+.host-policy-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid #eceef2;
+}
+
+.host-policy-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.host-policy-step-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #c9cfd8;
+  background: #fff;
+  color: #212529;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.host-policy-step-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.host-policy-count {
+  min-width: 24px;
+  text-align: center;
+  font-weight: 600;
+}

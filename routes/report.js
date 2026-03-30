@@ -1,0 +1,112 @@
+const express = require("express");
+const router = express.Router();
+const Report = require("../models/report");
+const nodemailer = require("nodemailer");
+const axios = require("axios");
+
+// GET
+router.get("/", (req, res) => {
+  return res.render("report");
+});
+
+// POST
+router.post("/", async (req, res) => {
+  const {
+    reason,
+    description,
+    email,
+    "g-recaptcha-response": recaptcha,
+  } = req.body;
+
+  const secret = process.env.RECAPTCHA_SECRET_KEY;
+
+  // 🔴 STEP 1: CAPTCHA must be filled
+  if (!recaptcha) {
+    return res.status(400).render("error", {
+      message: "Please complete the CAPTCHA ❌",
+    });
+  }
+
+  // 🔴 STEP 2: Verify CAPTCHA
+  try {
+    const verifyUrl = "https://www.google.com/recaptcha/api/siteverify";
+
+    const params = new URLSearchParams();
+    params.append("secret", secret);
+    params.append("response", recaptcha);
+
+    const response = await axios.post(verifyUrl, params, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    });
+
+    if (!response.data.success) {
+      return res.status(400).render("error", {
+        message: "reCAPTCHA verification failed. Please try again.",
+      });
+    }
+
+  } catch (err) {
+    console.error("reCAPTCHA verification error:", err);
+    return res.status(400).render("error", {
+      message: "reCAPTCHA verification failed. Please try again.",
+    });
+  }
+
+  // 🔴 STEP 3: Gmail validation
+  if (
+    email &&
+    !/^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(email)
+  ) {
+    return res.status(400).render("error", {
+      message: "Only gmail.com email addresses are allowed.",
+    });
+  }
+
+  try {
+    // ✅ Save to DB
+    const report = new Report({
+      reason,
+      description,
+      email,
+    });
+
+    await report.save();
+
+    // ✅ Send email
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.CONTACT_EMAIL_USER,
+        pass: process.env.CONTACT_EMAIL_PASS,
+      },
+    });
+
+    await transporter.sendMail({
+      from: process.env.CONTACT_EMAIL_USER,
+      to:
+        process.env.CONTACT_EMAIL_RECEIVER ||
+        process.env.CONTACT_EMAIL_USER,
+      subject: "🚨 New Report Submission",
+      text: `
+New Report Received:
+
+Reason: ${reason}
+Description: ${description}
+Email: ${email || "N/A"}
+      `,
+    });
+
+    // ✅ Success page
+    return res.render("report-success", { reason });
+
+  } catch (err) {
+    console.error("Report form error:", err);
+    return res.status(500).render("error", {
+      message: "Sorry, something went wrong. Please try again later.",
+    });
+  }
+});
+
+module.exports = router;

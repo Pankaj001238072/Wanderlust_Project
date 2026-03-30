@@ -1,0 +1,41 @@
+<div class="booking-policy-card mb-2" role="alert">
+    <h6 class="booking-policy-title mb-2">Guest & Pet Policy</h6>
+
+    <div class="booking-policy-row">
+        <span>Guests</span>
+        <b>Up to <%= maxGuests %></b>
+    </div>
+
+    <div class="booking-policy-row">
+        <span>Kids</span>
+        <b>
+            <%= maxKids> 0 ? `Up to ${maxKids}` : "Not allowed" %>
+        </b>
+    </div>
+
+    <div class="booking-policy-row">
+        <span>Infants</span>
+        <b>
+            <%= maxInfants> 0 ? `Up to ${maxInfants}` : "Not allowed" %>
+        </b>
+    </div>
+
+    <div class="booking-policy-row">
+        <span>Pets</span>
+        <b>
+            <%= maxPets> 0 ? `Up to ${maxPets}` : "Not allowed" %>
+        </b>
+    </div>
+
+    <div class="booking-policy-row border-0 pb-0 mb-0">
+        <span>Pricing</span>
+        <b>
+            <% if (extraGuestFeePerNight> 0) { %>
+                Base <%= baseGuests %> incl. +&#8377;<%= extraGuestFeePerNight.toLocaleString("en-IN") %>/extra
+                        guest/night (max <%= maxGuests %>).
+                            <% } else { %>
+                                Up to <%= maxGuests %> guests included.
+                                    <% } %>
+        </b>
+    </div>
+</div>

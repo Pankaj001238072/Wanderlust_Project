@@ -1,0 +1,30 @@
+.btn-delete-offer {
+  background: #fff;
+  color: #dc3545;
+  border: 1px solid #dc3545;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+.btn-delete-offer:hover,
+.btn-delete-offer:focus {
+  background: #dc3545;
+  color: #fff;
+  border: 1px solid #dc3545;
+}
+/* View Listing button offer page */
+.btn-view-listing-offer {
+  background: #fff;
+  color: #212529;
+  border: 1px solid #212529;
+  transition:
+    background 0.2s,
+    color 0.2s;
+  text-decoration: none;
+}
+.btn-view-listing-offer:hover,
+.btn-view-listing-offer:focus {
+  background: #212529;
+  color: #fff;
+  border: 1px solid #212529;
+}

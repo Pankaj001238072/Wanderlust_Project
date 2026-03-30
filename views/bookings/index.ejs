@@ -1,0 +1,206 @@
+<% layout("/layouts/boilerplate") %>
+
+  <div class="row mt-4 mb-4 my-bookings-page">
+    <div class="col-12 col-lg-11 mx-auto">
+
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+        <h3 class="mb-0">My Bookings</h3>
+
+        <% if (bookings.length> 0) { %>
+          <% const confirmedCount=bookings.filter((booking)=> booking.status === "confirmed").length; %>
+            <% const cancelledCount=bookings.filter((booking)=> booking.status !== "confirmed").length; %>
+
+              <div class="d-flex align-items-center gap-2">
+                <span class="badge rounded-2 text-bg-success">
+                  Confirmed: <%= confirmedCount %>
+                </span>
+
+                <span class="badge rounded-2 text-bg-danger">
+                  Cancelled: <%= cancelledCount %>
+                </span>
+              </div>
+              <% } %>
+      </div>
+
+
+      <div class="alert alert-info py-2 mb-3" role="alert">
+        <b>Cancellation Policy:</b>
+
+        <ul class="mb-0 mt-1 ps-3">
+          <li>
+            Cancellation is allowed within 30 minutes of booking confirmation,
+            or at least 2 hours before check-in.
+          </li>
+
+          <li>
+            After this window, cancellation is not permitted.
+          </li>
+        </ul>
+      </div>
+
+
+      <% if (bookings.length===0) { %>
+
+        <div class="card booking-empty-state border-0">
+          <div class="card-body p-4">
+
+            <h5 class="mb-2">No bookings yet</h5>
+
+            <p class="text-muted mb-3">
+              You have not made any bookings yet.
+            </p>
+
+            <a href="/listings" class="btn btn-dark btn-sm">
+              Explore Listings
+            </a>
+
+          </div>
+        </div>
+
+        <% } %>
+
+
+          <% if (bookings.length> 0) { %>
+
+            <% const CANCEL_GRACE_MS=30 * 60 * 1000; %>
+              <% const CANCEL_CUTOFF_MS=2 * 60 * 60 * 1000; %>
+                <% const now=new Date(); %>
+
+                  <div class="row g-3">
+
+                    <% for (let booking of bookings) { %>
+
+                      <div class="col-12 col-md-6 col-lg-4">
+
+                        <div class="card h-100 booking-card">
+
+                          <% if (booking.listing && booking.listing.image && booking.listing.image.url) { %>
+
+                            <img src="<%= booking.listing.image.url %>" class="card-img-top booking-card-img"
+                              alt="listing image" />
+
+                            <% } else { %>
+
+                              <div
+                                class="card-img-top booking-card-img d-flex align-items-center justify-content-center bg-light text-muted">
+                                Listing removed
+                              </div>
+
+                              <% } %>
+
+
+                                <div class="card-body booking-card-body">
+
+                                  <h5 class="card-title mb-2">
+                                    <%= booking.listing ? booking.listing.title : "Listing removed by host" %>
+                                  </h5>
+
+
+                                  <% if (!booking.listing) { %>
+
+                                    <p class="text-muted small mb-2">
+                                      This listing was deleted, but your booking record is kept for history.
+                                    </p>
+
+                                    <% } %>
+
+
+                                      <div class="booking-meta mb-3">
+
+                                        <p class="card-text mb-1">
+                                          <b>Check-in:</b>
+                                          <%= new Date(booking.checkIn).toLocaleDateString("en-IN") %>
+                                        </p>
+
+                                        <p class="card-text mb-1">
+                                          <b>Check-out:</b>
+                                          <%= new Date(booking.checkOut).toLocaleDateString("en-IN") %>
+                                        </p>
+
+                                        <p class="card-text mb-1">
+                                          <b>Total:</b>
+                                          ₹ <%= booking.totalPrice.toLocaleString("en-IN") %>
+                                        </p>
+
+                                        <p class="card-text mb-1">
+                                          <b>People:</b>
+                                          <%= booking.people ?? "-" %>
+                                        </p>
+
+                                        <p class="card-text mb-1">
+                                          <b>Kids:</b>
+                                          <%= booking.kids ?? 0 %>
+                                        </p>
+
+                                        <p class="card-text mb-1">
+                                          <b>Infants:</b>
+                                          <%= booking.infants ?? 0 %>
+                                        </p>
+
+                                        <p class="card-text mb-1">
+                                          <b>Pets:</b>
+                                          <%= booking.pets ?? 0 %>
+                                        </p>
+
+                                        <p class="card-text mb-0 d-flex align-items-center gap-2">
+                                          <b>Status:</b>
+
+                                          <span
+                                            class="badge rounded-pill <%= booking.status === 'confirmed' ? 'text-bg-success' : 'text-bg-danger' %>">
+                                            <%= booking.status %>
+                                          </span>
+
+                                        </p>
+
+                                      </div>
+
+
+
+                                      <% if (booking.listing && booking.listing._id) { %>
+                                        <a href="/listings/<%= booking.listing._id %>"
+                                          class="btn btn-outline-dark btn-sm me-2 mb-2 mb-sm-0">
+                                          View listing
+                                        </a>
+                                        <% } %>
+
+
+                                          <% const bookingCreatedAt=new Date(booking.createdAt); %>
+                                            <% const bookingCheckIn=new Date(booking.checkIn); %>
+
+                                              <% const graceWindowEndsAt=new Date(bookingCreatedAt.getTime() +
+                                                CANCEL_GRACE_MS); %>
+
+                                                <% const checkInCutoffAt=new Date(bookingCheckIn.getTime() -
+                                                  CANCEL_CUTOFF_MS); %>
+
+                                                  <% const canCancel=booking.status==="confirmed" && (now
+                                                    <=graceWindowEndsAt || now <=checkInCutoffAt); %>
+
+
+                                                    <% if (canCancel) { %>
+
+                                                      <form method="POST"
+                                                        action="/bookings/<%= booking._id %>?_method=DELETE"
+                                                        class="d-inline">
+                                                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                          Cancel
+                                                        </button>
+
+                                                      </form>
+
+                                                      <% } %>
+
+                                </div>
+
+                        </div>
+
+                      </div>
+
+                      <% } %>
+
+                  </div>
+
+                  <% } %>
+
+    </div>
+  </div>

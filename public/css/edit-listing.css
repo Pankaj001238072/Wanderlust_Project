@@ -1,0 +1,119 @@
+.host-policy-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
+.host-policy-stepper {
+  display: flex;
+  justify-content: space-between;
+}
+
+@media (max-width: 240px) {
+  .host-policy-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.2rem;
+    padding-bottom: 0.3rem;
+    margin-bottom: 0.3rem;
+  }
+  .host-policy-stepper {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.1rem;
+  }
+  .host-policy-step-btn {
+    width: 20px;
+    height: 20px;
+    font-size: 0.8rem;
+  }
+  .host-policy-count {
+    font-size: 0.8rem;
+    min-width: 18px;
+    text-align: center;
+  }
+}
+/* Image */
+.edit-page-img {
+  width: 250px !important;
+  height: 200px !important;
+  object-fit: cover !important;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Container */
+.edit-listing-container {
+  padding: 1rem;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ===== 1200px ===== */
+@media (max-width: 1200px) {
+  .edit-page-img {
+    width: 200px !important;
+    height: 160px !important;
+  }
+
+  .edit-listing-container {
+    padding: 0.5rem 1rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+}
+
+/* ===== 900px ===== */
+@media (max-width: 900px) {
+  .edit-page-img {
+    width: 160px !important;
+    height: 120px !important;
+  }
+
+  .edit-listing-container {
+    padding: 0.25rem 0.5rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+  }
+}
+
+/* ===== 600px ===== */
+@media (max-width: 600px) {
+  .edit-page-img {
+    width: 100px !important;
+    height: 80px !important;
+  }
+
+  .edit-listing-container {
+    padding: 0.7rem 0.7rem;
+    margin-left: 0.25rem;
+    margin-right: 0.25rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .form-label {
+    font-size: 1rem;
+  }
+
+  .form-control {
+    font-size: 1rem;
+    padding: 0.5rem;
+  }
+}
+
+.main {
+  margin-top: 1.7rem !important;
+  margin-bottom: 1.1rem !important;
+  margin-left: 0.5rem !important;
+  margin-right: 0.5rem !important;
+}
+
+.edit-btn {
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
+}
