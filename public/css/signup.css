@@ -9,10 +9,10 @@
 
 @media (max-width: 575px) {
   .signup-card {
-    margin-top: 1rem;
+    margin-top: 1.2rem;
     margin-bottom: 1.2rem;
-    margin-left: 1rem;
-    margin-right: 1rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
     box-shadow: 0 4px 15px rgba(0,0,0,0.08); /* Lighter shadow for mobile */
   }
 }
