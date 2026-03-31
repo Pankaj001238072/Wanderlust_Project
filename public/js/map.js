@@ -20,11 +20,12 @@ const marker = new maptilersdk.Marker({color:"red"})
   // (Circle Layer) Add a circle layer to highlight the listing location
 
 map.on("load", () => {
-  // 🌟 Turn off skeleton loader and show map smoothly
+  // 🌟 Turn off skeleton loader smoothly
   const skeleton = document.getElementById("map-skeleton");
-  const mapElement = document.getElementById("map");
-  if(skeleton) skeleton.style.display = "none";
-  if(mapElement) mapElement.style.opacity = "1";
+  if(skeleton) {
+    skeleton.style.opacity = "0";
+    setTimeout(() => skeleton.remove(), 500);
+  }
 
   // GeoJSON source for circle
   map.addSource("listing-location", {

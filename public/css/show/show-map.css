@@ -1,4 +1,4 @@
-#map {
+.map-wrapper {
   height: clamp(240px, 38vh, 380px);
   width: var(--show-frame-width) !important;
   max-width: var(--show-media-width);
@@ -6,10 +6,21 @@
   margin-left: auto;
   margin-right: auto;
   border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  background: #f8f9fa;
+}
+
+#map {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
 }
 
 @media (max-width: 575px) {
-  #map {
+  .map-wrapper {
     height: clamp(210px, 30vh, 250px);
     margin-top: 0.4rem;
   }
