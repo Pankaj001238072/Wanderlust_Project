@@ -205,7 +205,18 @@
 
           <h3>Where you'll be</h3>
 
-          <div id="map"></div>
+          <div class="map-container position-relative rounded overflow-hidden" style="height: 400px; width: 100%; background: #f8f9fa;">
+            <!-- Map Loader Skeleton -->
+            <div id="map-skeleton" class="position-absolute w-100 h-100 d-flex flex-column justify-content-center align-items-center text-muted" style="z-index: 1;">
+              <div class="spinner-grow text-danger mb-2" role="status" style="width: 2.5rem; height: 2.5rem; opacity: 0.6">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <span class="fw-medium small">Loading location map...</span>
+            </div>
+
+            <!-- The Map -->
+            <div id="map" class="position-absolute w-100 h-100" style="opacity: 0; transition: opacity 0.5s ease-in-out; z-index: 2;"></div>
+          </div>
 
         </div>
 
