@@ -171,8 +171,8 @@ module.exports.updateProfile = async (req, res) => {
 
       const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST || "smtp-relay.brevo.com",
-        port: 465,
-        secure: true, // true for 465, false for 587
+        port: parseInt(process.env.SMTP_PORT) || 587,
+        secure: false, // true for 465, false for 587
         auth: {
           user: process.env.SMTP_USER,
           pass: process.env.SMTP_PASS,
