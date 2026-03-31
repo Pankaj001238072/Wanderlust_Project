@@ -58,6 +58,10 @@
     gap: 0.15rem;
   }
 
+  .checkout-summary-row span::after {
+    content: ".";
+  }
+
   .checkout-summary-row b {
     text-align: right;
   }

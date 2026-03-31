@@ -58,6 +58,7 @@
   position: absolute;
   top: 50%;
   right: 12px;
+  left: auto !important; /* Ensure it stays on the right, even on mobile */
   transform: translateY(-50%);
   cursor: pointer;
   color: #888;
