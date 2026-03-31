@@ -13,18 +13,11 @@ const destroyListing = async (req, res) => {
   }
 
   if (listing.image && listing.image.filename) {
-    try {
-      await deleteImage(listing.image.filename);
-      console.log(
-        "Cloudinary image deleted:",
-        listing.image.filename,
-      );
-    } catch (err) {
-      console.log(
-        "Error deleting Cloudinary image:",
-        err.message,
-      );
-    }
+    setImmediate(() => {
+      deleteImage(listing.image.filename)
+        .then(() => console.log("Cloudinary image deleted in background:", listing.image.filename))
+        .catch((err) => console.log("Error deleting Cloudinary image in background:", err.message));
+    });
   }
 
   const deletedListing =

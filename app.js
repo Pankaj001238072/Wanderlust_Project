@@ -11,6 +11,7 @@ const app = express(); // Creating an instance of express
 app.set('trust proxy', 2); // Trust the reverse proxy chain (like Render's multiple load balancer IPs) to ensure correct IP and Secure cookie handling
 const mongoose = require("mongoose"); // Importing mongoose for MongoDB interaction
 const path = require("path"); // Importing path module for handling file paths
+const compression = require("compression"); // Importing compression for gzip response
 const methodOverride = require("method-override"); // Importing method-override for supporting PUT and DELETE methods
 const ejsMate = require("ejs-mate"); // Importing ejs-mate for EJS templating engine
 const ExpressError = require("./utils/ExpressError.js"); // Importing custom ExpressError class for error handling (utils folder-> ExpressError.js)
@@ -65,7 +66,8 @@ app.use(express.json()); // Middleware to parse JSON bodies
 app.use(express.urlencoded({ extended: true })); // Middleware to parse URL-encoded bodies
 app.use(methodOverride("_method")); // Middleware to support PUT and DELETE methods via query parameter
 app.engine("ejs", ejsMate); // Using ejs-mate as the engine for EJS templates
-app.use(express.static(path.join(__dirname, "public"))); // Serving static files from the "public" directory
+app.use(compression()); // Zips the responses to drastically improve load times
+app.use(express.static(path.join(__dirname, "public"))); // Default ETag caching avoids stale data issues
 
 const store = MongoStore.create({
   mongoUrl: dbUrl, // MongoDB connection URL for storing session data

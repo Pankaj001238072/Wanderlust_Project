@@ -97,6 +97,7 @@ const listingSchema = new Schema({
       "domes",
       "boats",
     ],
+    index: true, // Speeds up filter queries
   },
 });
 
