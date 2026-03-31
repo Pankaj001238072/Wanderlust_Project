@@ -29,14 +29,16 @@ module.exports.signup = async (req, res) => {
         });
 
         const transporter = nodemailer.createTransport({
-          service: "gmail",
+          host: process.env.SMTP_HOST,
+          port: process.env.SMTP_PORT,
+          secure: false,
           auth: {
-            user: process.env.CONTACT_EMAIL_USER,
-            pass: process.env.CONTACT_EMAIL_PASS,
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS,
           },
         });
         await transporter.sendMail({
-          from: process.env.CONTACT_EMAIL_USER,
+          from: `"Wanderlust" <${process.env.SMTP_USER}>`,
           to: registeredUser.email,
           subject: "Welcome to Wanderlust!",
           text: `Hi ${registeredUser.username},\n\nYour account has been created successfully. Enjoy exploring and booking unique stays!`,
@@ -167,14 +169,16 @@ module.exports.updateProfile = async (req, res) => {
       });
 
       const transporter = nodemailer.createTransport({
-        service: "gmail",
+        host: process.env.SMTP_HOST,
+        port: process.env.SMTP_PORT,
+        secure: false,
         auth: {
-          user: process.env.CONTACT_EMAIL_USER,
-          pass: process.env.CONTACT_EMAIL_PASS,
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS,
         },
       });
       await transporter.sendMail({
-        from: process.env.CONTACT_EMAIL_USER,
+        from: `"Wanderlust Profile" <${process.env.SMTP_USER}>`,
         to: user.email,
         subject: "Profile Updated",
         text: `Hi ${user.username},\n\nYour profile has been updated successfully.\n\nIf you did not make this change, please contact support.`,
@@ -257,14 +261,16 @@ module.exports.deleteAccount = async (req, res) => {
           deletedUserName,
         );
         const transporter = nodemailer.createTransport({
-          service: "gmail",
+          host: process.env.SMTP_HOST,
+          port: process.env.SMTP_PORT,
+          secure: false,
           auth: {
-            user: process.env.CONTACT_EMAIL_USER,
-            pass: process.env.CONTACT_EMAIL_PASS,
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS,
           },
         });
         await transporter.sendMail({
-          from: process.env.CONTACT_EMAIL_USER,
+          from: `"Wanderlust Support" <${process.env.SMTP_USER}>`,
           to: deletedUserEmail,
           subject: "Account Permanently Deleted",
           text: `Hi ${deletedUserName},\n\nYour account and all related data (listings, offers, bookings, reviews) have been permanently deleted as per your request. If you did not make this request, please contact support immediately.`,

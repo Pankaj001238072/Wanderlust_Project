@@ -173,14 +173,16 @@ const paymentSuccess = async (req, res) => {
       });
 
       const transporter = nodemailer.createTransport({
-        service: "gmail",
+        host: process.env.SMTP_HOST,
+        port: process.env.SMTP_PORT,
+        secure: false,
         auth: {
-          user: process.env.CONTACT_EMAIL_USER,
-          pass: process.env.CONTACT_EMAIL_PASS,
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS,
         },
       });
       await transporter.sendMail({
-        from: process.env.CONTACT_EMAIL_USER,
+        from: `"Wanderlust Booking" <${process.env.SMTP_USER}>`,
         to: userEmail,
         subject,
         text,

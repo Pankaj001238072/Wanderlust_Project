@@ -28,17 +28,19 @@ exports.createOffer = async (req, res) => {
         const Subscriber = require("../models/subscriber");
         const subscribers = await Subscriber.find({}, "email");
         const transporter = nodemailer.createTransport({
-          service: "gmail",
+          host: process.env.SMTP_HOST,
+          port: process.env.SMTP_PORT,
+          secure: false,
           auth: {
-            user: process.env.CONTACT_EMAIL_USER,
-            pass: process.env.CONTACT_EMAIL_PASS,
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS,
           },
         });
 
         for (const subscriber of subscribers) {
           try {
             await transporter.sendMail({
-              from: process.env.CONTACT_EMAIL_USER,
+              from: `"Wanderlust Deals" <${process.env.SMTP_USER}>`,
               to: subscriber.email,
               subject: "New Offer Available!",
               text: `New Offer: ${offer.title}\n${offer.description}\nDiscount: ${offer.discount}%\nValid Till: ${offer.validTill}`,

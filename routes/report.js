@@ -89,8 +89,8 @@ router.post("/", async (req, res) => {
         });
 
         await transporter.sendMail({
-          from: process.env.CONTACT_EMAIL_USER,
-          to: process.env.CONTACT_EMAIL_RECEIVER || process.env.CONTACT_EMAIL_USER,
+          from: `"Wanderlust Report" <${process.env.SMTP_USER}>`,
+          to: process.env.CONTACT_EMAIL_RECEIVER,
           subject: "🚨 New Report Submission",
           text: `New Report Received:\n\nReason: ${reason}\nDescription: ${description}\nEmail: ${email || "N/A"}`,
         });
