@@ -1,8 +1,7 @@
 <% layout("/layouts/boilerplate") %>
     <link rel="stylesheet" href="/css/edit-profile.css">
 
-    <div class="container"
-        style="min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding-top: 2vw; padding-bottom: 2vw;">
+    <div class="edit-profile-wrapper">
         <div class="row justify-content-center w-100">
             <div class="col-md-7 col-lg-6">
                 <div class="edit-profile-card mx-auto">
@@ -37,8 +36,8 @@
                                     <% } %>
                             </div>
                             <div class="edit-profile-btns">
-                                <button type="submit" class="edit-profile-btn-save mt-3">Save Changes</button>
-                                <a href="/profile" class="edit-profile-btn-cancel mt-3">Cancel</a>
+                                <button type="submit" class="edit-profile-btn-save">Save Changes</button>
+                                <a href="/profile" class="edit-profile-btn-cancel">Cancel</a>
                             </div>
                         </form>
                         <div class="edit-profile-delete">

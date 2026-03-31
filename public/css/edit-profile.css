@@ -1,4 +1,14 @@
 /* Airbnb-style Edit Profile Page */
+.edit-profile-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 2vw;
+  padding-bottom: 2vw;
+  width: 100%;
+}
+
 .edit-profile-card {
   border-radius: 20px;
   box-shadow: 0 4px 32px rgba(0, 0, 0, 0.1);
@@ -46,19 +56,27 @@
 }
 
 @media (max-width: 600px) {
+  .edit-profile-wrapper {
+    min-height: auto;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
   .edit-profile-card {
     max-width: 99vw;
-    padding: 0.7rem 1.1rem;
-    margin-top: 0.5rem;
+    padding: 0.6rem 0.9rem;
+    margin-top: 0.1rem;
+    border-radius: 12px;
   }
   .edit-profile-title {
     font-size: 1.05rem;
+    margin-bottom: 0.6rem;
   }
   .edit-profile-photo-preview {
     flex-direction: column;
     align-items: center;
     gap: 0.3rem;
-    margin-bottom: 0.7rem;
+    margin-bottom: 0.5rem;
+    margin-top: 0.2rem;
   }
   .edit-profile-photo-preview img {
     margin-bottom: 0.1rem;
@@ -74,33 +92,25 @@
     color: #888;
   }
   .edit-profile-btns {
-    margin-top: 0.7rem;
-  }
-  .edit-profile-btns button,
-  .edit-profile-btns a {
     margin-top: 0.3rem;
-  }
-  .edit-profile-form .form-control {
-    margin-bottom: 0.7rem;
-  }
-  .edit-profile-photo-preview img {
-    width: 36px;
-    height: 36px;
-  }
-  .edit-profile-btns {
     flex-direction: column;
-    gap: 0.6rem;
-    margin-top: 0.2rem;
-    margin-bottom: 0.5rem;
+    gap: 0.4rem;
+    margin-bottom: 0.3rem;
   }
   .edit-profile-btns button,
   .edit-profile-btns a {
     width: 100%;
     font-size: 0.89rem !important;
     padding: 0.28rem 0.3rem !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
     margin-left: 0 !important;
     margin-right: 0 !important;
     text-align: center;
+  }
+  .edit-profile-delete {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
   }
   .edit-profile-delete .btn {
     width: 100%;
