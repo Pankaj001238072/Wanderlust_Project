@@ -14,6 +14,7 @@
     </p>
 
     <form action="/login" method="POST" class="needs-validation" novalidate>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
       <!-- Username -->
       <div class="mb-3">
@@ -21,7 +22,8 @@
         <div class="input-wrap">
           <i class="fa-regular fa-user"></i>
           <input name="username" type="text" class="form-control"
-            placeholder="Your username" required />
+            placeholder="Your username" required 
+            autocapitalize="none" autocorrect="off" spellcheck="false" />
         </div>
       </div>
 

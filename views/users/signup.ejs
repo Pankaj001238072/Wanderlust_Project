@@ -14,6 +14,7 @@
     </p>
 
     <form action="/signup" method="POST" class="needs-validation" novalidate>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
       <script src="/js/signup-captcha.js"></script>
 
@@ -23,7 +24,8 @@
         <div class="input-wrap">
           <i class="fa-regular fa-user"></i>
           <input name="username" type="text" class="form-control"
-            placeholder="Choose a username" minlength="3" required />
+            placeholder="Choose a username" minlength="3" required 
+            autocapitalize="none" autocorrect="off" spellcheck="false" />
         </div>
       </div>
 
@@ -33,7 +35,8 @@
         <div class="input-wrap">
           <i class="fa-regular fa-envelope"></i>
           <input name="email" type="email" class="form-control"
-            placeholder="your@gmail.com" required />
+            placeholder="your@gmail.com" required 
+            autocapitalize="none" autocorrect="off" spellcheck="false" />
         </div>
       </div>
 

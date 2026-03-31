@@ -92,10 +92,17 @@ router
     // Route to handle user login
     redirectIfLoggedIn,
     loginLimiter,
-    saveRedirectUrl, // Middleware to save the original URL the user was trying to access before being redirected to login
+    saveRedirectUrl,
+    (req, res, next) => {
+      console.log("--- LOGIN ATTEMPT ---");
+      console.log("Device:", req.headers["user-agent"]);
+      console.log("Username Received:", `'${req.body.username}'`);
+      console.log("Username Length:", req.body.username ? req.body.username.length : 0);
+      next();
+    },
     passport.authenticate("local", {
-      failureRedirect: "/login", // Redirecting back to the login page if authentication fails
-      failureFlash: true, // Enabling flash messages for authentication failures
+      failureRedirect: "/login",
+      failureFlash: true,
     }),
     userController.login,
   );
