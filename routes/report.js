@@ -78,8 +78,12 @@ router.post("/", async (req, res) => {
     // Send email in background (non-blocking) — keeps submit instant
     setImmediate(async () => {
       try {
+        console.log("DEBUG: Attempting to send report email via Brevo...");
+        console.log("DEBUG: SMTP_HOST:", process.env.SMTP_HOST);
+        console.log("DEBUG: RECEIVER:", process.env.CONTACT_EMAIL_RECEIVER);
+
         const transporter = nodemailer.createTransport({
-          host: process.env.SMTP_HOST,
+          host: process.env.SMTP_HOST || "smtp-relay.brevo.com",
           port: parseInt(process.env.SMTP_PORT) || 587,
           secure: false, // true for 465, false for other ports like 587
           auth: {
@@ -88,6 +92,7 @@ router.post("/", async (req, res) => {
           },
         });
 
+        console.log("DEBUG: Report transporter created. Sending mail...");
         await transporter.sendMail({
           from: process.env.SMTP_USER,
           to: process.env.CONTACT_EMAIL_RECEIVER,
@@ -95,9 +100,10 @@ router.post("/", async (req, res) => {
           text: `New Report Received:\n\nReason: ${reason}\nDescription: ${description}\nEmail: ${email || "N/A"}`,
         });
 
-        console.log("Report email sent successfully.");
+        console.log("✅ Report email sent successfully.");
       } catch (mailErr) {
-        console.error("Report email sending failed:", mailErr.message);
+        console.error("❌ Report email sending failed:", mailErr.message);
+        console.error("DEBUG: Full error stack:", mailErr.stack);
       }
     });
 
