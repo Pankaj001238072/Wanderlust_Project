@@ -31,7 +31,7 @@ Wanderlust is a full-stack web application for discovering and booking unique st
   * Old images auto-deleted from Cloudinary
   * Temp files cleaned after upload
 * **Offers & Discounts:** Owners create offers → subscribers notified
-* **Newsletter:** Footer-based subscription (Gmail only)
+* **Newsletter:** Footer-based subscription (SMTP-based)
 * **Contact & Report Forms:** Email-based support system
 * **Responsive UI:** Mobile-first modern design
 * **Demo User:** Optional credentials for testing
@@ -111,8 +111,10 @@ CLOUD_NAME=
 CLOUD_API_KEY=
 CLOUD_API_SECRET=
 
-CONTACT_EMAIL_USER=
-CONTACT_EMAIL_PASS=
+SMTP_HOST=smtp-relay.brevo.com
+SMTP_PORT=587
+SMTP_USER=
+SMTP_PASS=
 CONTACT_EMAIL_RECEIVER=
 
 PAYMENT_SESSION_TTL_MIN=30
@@ -188,7 +190,7 @@ http://localhost:8080
 ### Newsletter
 
 * Footer subscription
-* Gmail-based system
+* SMTP-based system (configured for Brevo/Gmail)
 * Files: `controllers/subscriber.js`
 
 ### Notifications & Wishlist
