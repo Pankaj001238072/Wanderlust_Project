@@ -31,4 +31,7 @@ const notificationSchema = new Schema({
   },
 });
 
+// Compound index for lightning-fast page load notification queries
+notificationSchema.index({ user: 1, createdAt: -1 });
+
 module.exports = mongoose.model("Notification", notificationSchema);

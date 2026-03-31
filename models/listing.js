@@ -6,7 +6,8 @@ const Review = require("./review.js"); // Import Review model
 const listingSchema = new Schema({
   title: {
     type: String,
-    required: true, // ✅ better to make title mandatory
+    required: true,
+    index: true,
   },
   description: String,
 
@@ -59,8 +60,14 @@ const listingSchema = new Schema({
     default: 0,
     min: 0,
   },
-  location: String,
-  country: String,
+  location: {
+    type: String,
+    index: true,
+  },
+  country: {
+    type: String,
+    index: true,
+  },
   reviews: [
     {
       type: Schema.Types.ObjectId,
