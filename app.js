@@ -67,7 +67,7 @@ app.use(express.urlencoded({ extended: true })); // Middleware to parse URL-enco
 app.use(methodOverride("_method")); // Middleware to support PUT and DELETE methods via query parameter
 app.engine("ejs", ejsMate); // Using ejs-mate as the engine for EJS templates
 app.use(compression()); // Zips the responses to drastically improve load times
-app.use(express.static(path.join(__dirname, "public"))); // Default ETag caching avoids stale data issues
+app.use(express.static(path.join(__dirname, "public"))); // Safe ETag caching to avoid stale files
 
 const store = MongoStore.create({
   mongoUrl: dbUrl, // MongoDB connection URL for storing session data

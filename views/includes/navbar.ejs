@@ -132,11 +132,29 @@
     try {
       const csrfMeta = document.querySelector('meta[name="csrf-token"]');
       const csrfToken = csrfMeta ? csrfMeta.getAttribute("content") : "";
+      // Optimistic UI: Update immediately without reloading
+      const badge = document.querySelector('.notification-badge');
+      if (badge) badge.style.display = 'none';
+      
+      const unreadItems = document.querySelectorAll('.wl-dropdown-item.bg-light');
+      unreadItems.forEach(item => {
+        item.classList.remove('bg-light');
+        item.classList.add('bg-transparent', 'text-muted');
+        const textSpan = item.querySelector('span');
+        if (textSpan) {
+           textSpan.classList.remove('fw-bold');
+           textSpan.classList.add('fw-normal');
+        }
+      });
+
+      // Hide the 'Mark all as read' button itself
+      const markBtn = e.target;
+      if (markBtn) markBtn.style.display = 'none';
+
       await fetch('/notifications/mark-read', {
         method: 'POST',
         headers: { 'CSRF-Token': csrfToken }
       });
-      window.location.reload();
     } catch(err) {
       console.log(err);
     }
