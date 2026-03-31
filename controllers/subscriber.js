@@ -23,7 +23,6 @@ exports.subscribe = async (req, res) => {
       "Your subscription has been successfully completed. Please check your email to confirm your subscription.",
     );
     req.session.justSubscribed = true;
-    return res.redirect(req.get("Referer") || "/listings");
     
     // Capture user id if explicitly logged in
     const userId = req.user ? req.user._id : null;
@@ -54,8 +53,12 @@ exports.subscribe = async (req, res) => {
           subject: "Subscription Confirmed",
           text: `Thank you for subscribing to Wanderlust updates! You'll now receive the latest news and offers.`,
         });
-      } catch (e) {}
+      } catch (e) {
+        console.error("Subscription email failed:", e.message);
+      }
     });
+
+    return res.redirect(req.get("Referer") || "/listings");
   } catch (err) {
     if (err.code === 11000) {
       req.flash(
