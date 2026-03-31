@@ -2,6 +2,9 @@
 
 Wanderlust is a full-stack premium web application for discovering and booking unique stays. Built using **Node.js, Express, MongoDB (Mongoose), EJS, and Bootstrap**, it integrates modern services like **Cloudinary (image storage), Stripe (payments), MapTiler (maps), and Nodemailer (emails)**. It also features a custom-built **AI Assistant** powered by **Google Gemini**.
 
+## 🚀 Live Demo
+**Check out the live project here**: [Wanderlust on Render](https://wanderlust-project-nhvd.onrender.com)
+
 
 
 ## Unique Features & Highlights
@@ -70,6 +73,7 @@ Wanderlust is a full-stack premium web application for discovering and booking u
 * Google Gemini 2.5 Flash (AI Intelligence)
 * Brevo (SMTP Relay Service)
 * Google reCAPTCHA v2 (Form Security)
+* **Render** (Cloud Hosting & Continuous Deployment)
 
 
 
