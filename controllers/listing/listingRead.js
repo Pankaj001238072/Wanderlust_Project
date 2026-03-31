@@ -7,16 +7,17 @@ const index = async (req, res) => {
   const filter = {};
 
   if (req.query.search) {
+    const searchQuery = req.query.search.trim(); // Trim spaces for mobile keyboards
     filter.$or = [
       {
         location: {
-          $regex: req.query.search,
+          $regex: searchQuery,
           $options: "i",
         },
       },
       {
         country: {
-          $regex: req.query.search,
+          $regex: searchQuery,
           $options: "i",
         },
       },

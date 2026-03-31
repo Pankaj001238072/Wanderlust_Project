@@ -52,34 +52,48 @@
 
             <!-- Notifications Dropdown -->
             <div class="wl-bell-dropdown" id="notificationDropdown" style="position: relative; margin-right: 15px;">
-              <button class="wl-bell-btn" onclick="toggleNotificationMenu(event)" title="Notifications" aria-label="Notifications" style="position: relative;">
+              <button class="wl-bell-btn" onclick="toggleNotificationMenu(event)" title="Notifications"
+                aria-label="Notifications" style="position: relative;">
                 <i class="fa-regular fa-bell"></i>
-                <% if (typeof unreadCount !== 'undefined' && unreadCount > 0) { %>
-                  <span class="notification-badge" style="position: absolute; top: -2px; right: -4px; background: #ff385c; color: white; border-radius: 50%; width: 16px; height: 16px; font-size: 0.65rem; display: flex; align-items: center; justify-content: center; font-weight: bold;"><%= unreadCount %></span>
-                <% } %>
+                <% if (typeof unreadCount !=='undefined' && unreadCount> 0) { %>
+                  <span class="notification-badge"
+                    style="position: absolute; top: -2px; right: -4px; background: #ff385c; color: white; border-radius: 50%; width: 16px; height: 16px; font-size: 0.65rem; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                    <%= unreadCount %>
+                  </span>
+                  <% } %>
               </button>
-              
-              <div class="wl-dropdown-menu notification-menu" id="notificationDropMenu" style="width: 300px; right: -50px; max-height: 400px; overflow-y: auto;">
+
+              <div class="wl-dropdown-menu notification-menu" id="notificationDropMenu"
+                style="width: 300px; right: -50px; max-height: 400px; overflow-y: auto;">
                 <div class="wl-dropdown-header d-flex justify-content-between align-items-center">
                   <span class="fw-bold">Notifications</span>
-                  <% if (typeof unreadCount !== 'undefined' && unreadCount > 0) { %>
-                    <button onclick="markNotificationsRead(event)" class="btn btn-sm text-primary" style="font-size: 0.8rem; background: none; border: none; padding: 0;">Mark all as read</button>
-                  <% } %>
+                  <% if (typeof unreadCount !=='undefined' && unreadCount> 0) { %>
+                    <button onclick="markNotificationsRead(event)" class="btn btn-sm text-primary"
+                      style="font-size: 0.8rem; background: none; border: none; padding: 0;">Mark all as read</button>
+                    <% } %>
                 </div>
                 <div class="wl-dropdown-divider"></div>
-                
-                <% if (typeof notifications !== 'undefined' && notifications.length > 0) { %>
+
+                <% if (typeof notifications !=='undefined' && notifications.length> 0) { %>
                   <% for (let notif of notifications) { %>
-                    <div class="wl-dropdown-item d-flex flex-column align-items-start <%= notif.isRead ? 'text-muted bg-transparent' : 'bg-light' %>" style="white-space: normal; padding: 10px 15px; border-bottom: 1px solid #f0f0f0; cursor: default;">
-                      <span class="<%= notif.isRead ? 'fw-normal' : 'fw-bold' %>" style="font-size: 0.9rem; line-height: 1.4;"><%= notif.message %></span>
-                      <small class="text-muted mt-1" style="font-size: 0.75rem;"><%= new Date(notif.createdAt).toLocaleString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true }) %></small>
+                    <div
+                      class="wl-dropdown-item d-flex flex-column align-items-start <%= notif.isRead ? 'text-muted bg-transparent' : 'bg-light' %>"
+                      style="white-space: normal; padding: 10px 15px; border-bottom: 1px solid #f0f0f0; cursor: default;">
+                      <span class="<%= notif.isRead ? 'fw-normal' : 'fw-bold' %>"
+                        style="font-size: 0.9rem; line-height: 1.4;">
+                        <%= notif.message %>
+                      </span>
+                      <small class="text-muted mt-1" style="font-size: 0.75rem;">
+                        <%= new Date(notif.createdAt).toLocaleString('en-IN', { day: 'numeric' , month: 'short' ,
+                          year: 'numeric' , hour: 'numeric' , minute: '2-digit' , hour12: true }) %>
+                      </small>
                     </div>
-                  <% } %>
-                <% } else { %>
-                  <div class="p-3 text-center text-muted" style="font-size: 0.9rem;">
-                    No notifications yet
-                  </div>
-                <% } %>
+                    <% } %>
+                      <% } else { %>
+                        <div class="p-3 text-center text-muted" style="font-size: 0.9rem;">
+                          No notifications yet
+                        </div>
+                        <% } %>
               </div>
             </div>
 
@@ -135,15 +149,15 @@
       // Optimistic UI: Update immediately without reloading
       const badge = document.querySelector('.notification-badge');
       if (badge) badge.style.display = 'none';
-      
+
       const unreadItems = document.querySelectorAll('.wl-dropdown-item.bg-light');
       unreadItems.forEach(item => {
         item.classList.remove('bg-light');
         item.classList.add('bg-transparent', 'text-muted');
         const textSpan = item.querySelector('span');
         if (textSpan) {
-           textSpan.classList.remove('fw-bold');
-           textSpan.classList.add('fw-normal');
+          textSpan.classList.remove('fw-bold');
+          textSpan.classList.add('fw-normal');
         }
       });
 
@@ -155,7 +169,7 @@
         method: 'POST',
         headers: { 'CSRF-Token': csrfToken }
       });
-    } catch(err) {
+    } catch (err) {
       console.log(err);
     }
   }
