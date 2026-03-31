@@ -51,6 +51,22 @@
 
 .input-wrap input {
   padding-left: 35px;
+  padding-right: 35px; /* Space for eye icon */
+}
+
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #888;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.toggle-password:hover {
+  color: #ff385c;
 }
 
 /* Button */

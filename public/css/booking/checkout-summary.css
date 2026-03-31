@@ -55,13 +55,10 @@
 
   .checkout-summary-row {
     padding: 0.24rem 0;
-    flex-wrap: wrap;
     gap: 0.15rem;
   }
 
   .checkout-summary-row b {
-    width: 100%;
-    text-align: left;
-    white-space: normal;
+    text-align: right;
   }
 }

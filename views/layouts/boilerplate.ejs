@@ -136,6 +136,22 @@
 
 
       <script>
+        // Toggle Password Visibility
+        document.addEventListener("DOMContentLoaded", () => {
+          const togglePasswords = document.querySelectorAll(".toggle-password");
+          togglePasswords.forEach(toggle => {
+            toggle.addEventListener("click", function() {
+              const input = this.parentElement.querySelector("input");
+              if (input && input.type === "password") {
+                input.type = "text";
+                this.classList.replace("fa-eye-slash", "fa-eye");
+              } else if (input) {
+                input.type = "password";
+                this.classList.replace("fa-eye", "fa-eye-slash");
+              }
+            });
+          });
+        });
 
         (() => {
 

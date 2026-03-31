@@ -156,39 +156,41 @@
 
 
 
-                                      <% if (booking.listing && booking.listing._id) { %>
-                                        <a href="/listings/<%= booking.listing._id %>"
-                                          class="btn btn-outline-dark btn-sm me-2 mb-2 mb-sm-0">
-                                          View listing
-                                        </a>
-                                        <% } %>
+                                      <div class="d-flex flex-wrap align-items-center gap-2 mt-2">
+                                        <% if (booking.listing && booking.listing._id) { %>
+                                          <a href="/listings/<%= booking.listing._id %>"
+                                            class="btn btn-outline-dark btn-sm">
+                                            View listing
+                                          </a>
+                                          <% } %>
 
 
-                                          <% const bookingCreatedAt=new Date(booking.createdAt); %>
-                                            <% const bookingCheckIn=new Date(booking.checkIn); %>
+                                            <% const bookingCreatedAt=new Date(booking.createdAt); %>
+                                              <% const bookingCheckIn=new Date(booking.checkIn); %>
 
-                                              <% const graceWindowEndsAt=new Date(bookingCreatedAt.getTime() +
-                                                CANCEL_GRACE_MS); %>
+                                                <% const graceWindowEndsAt=new Date(bookingCreatedAt.getTime() +
+                                                  CANCEL_GRACE_MS); %>
 
-                                                <% const checkInCutoffAt=new Date(bookingCheckIn.getTime() -
-                                                  CANCEL_CUTOFF_MS); %>
+                                                  <% const checkInCutoffAt=new Date(bookingCheckIn.getTime() -
+                                                    CANCEL_CUTOFF_MS); %>
 
-                                                  <% const canCancel=booking.status==="confirmed" && (now
-                                                    <=graceWindowEndsAt || now <=checkInCutoffAt); %>
+                                                    <% const canCancel=booking.status==="confirmed" && (now
+                                                      <=graceWindowEndsAt || now <=checkInCutoffAt); %>
 
 
-                                                    <% if (canCancel) { %>
+                                                      <% if (canCancel) { %>
 
-                                                      <form method="POST"
-                                                        action="/bookings/<%= booking._id %>?_method=DELETE"
-                                                        class="d-inline">
-                                                        <button type="submit" class="btn btn-outline-danger btn-sm">
-                                                          Cancel
-                                                        </button>
+                                                        <form method="POST"
+                                                          action="/bookings/<%= booking._id %>?_method=DELETE"
+                                                          class="d-inline">
+                                                          <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                            Cancel
+                                                          </button>
 
-                                                      </form>
+                                                        </form>
 
-                                                      <% } %>
+                                                        <% } %>
+                                      </div>
 
                                 </div>
 
