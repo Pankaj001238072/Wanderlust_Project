@@ -86,7 +86,7 @@ router.post("/", async (req, res) => {
 
         console.log("DEBUG: Transporter created. Sending mail...");
         await transporter.sendMail({
-          from: process.env.SMTP_USER,
+          from: process.env.CONTACT_EMAIL_RECEIVER || process.env.SMTP_USER,
           to: process.env.CONTACT_EMAIL_RECEIVER,
           subject: "New Contact Form Submission",
           text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,

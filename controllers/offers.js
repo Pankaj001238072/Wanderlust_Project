@@ -40,7 +40,7 @@ exports.createOffer = async (req, res) => {
         for (const subscriber of subscribers) {
           try {
             await transporter.sendMail({
-              from: process.env.SMTP_USER,
+              from: process.env.CONTACT_EMAIL_RECEIVER || process.env.SMTP_USER,
               to: subscriber.email,
               subject: "New Offer Available!",
               text: `New Offer: ${offer.title}\n${offer.description}\nDiscount: ${offer.discount}%\nValid Till: ${offer.validTill}`,

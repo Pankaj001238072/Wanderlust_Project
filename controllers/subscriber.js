@@ -49,7 +49,7 @@ exports.subscribe = async (req, res) => {
           },
         });
         await transporter.sendMail({
-          from: process.env.SMTP_USER,
+          from: process.env.CONTACT_EMAIL_RECEIVER || process.env.SMTP_USER,
           to: email,
           subject: "Subscription Confirmed",
           text: `Thank you for subscribing to Wanderlust updates! You'll now receive the latest news and offers.`,

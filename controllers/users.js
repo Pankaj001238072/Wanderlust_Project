@@ -38,7 +38,7 @@ module.exports.signup = async (req, res) => {
           },
         });
         await transporter.sendMail({
-          from: process.env.SMTP_USER,
+          from: process.env.CONTACT_EMAIL_RECEIVER || process.env.SMTP_USER,
           to: registeredUser.email,
           subject: "Welcome to Wanderlust!",
           text: `Hi ${registeredUser.username},\n\nYour account has been created successfully. Enjoy exploring and booking unique stays!`,
@@ -169,6 +169,7 @@ module.exports.updateProfile = async (req, res) => {
         type: "success",
       });
 
+      console.log("DEBUG RENDER ENV: USER=", process.env.SMTP_USER, " PASS length=", process.env.SMTP_PASS ? process.env.SMTP_PASS.length : "UNDEFINED", " PORT=", process.env.SMTP_PORT);
       const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST || "smtp-relay.brevo.com",
         port: process.env.SMTP_PORT == '465' ? 2525 : (parseInt(process.env.SMTP_PORT) || 2525),
@@ -181,7 +182,7 @@ module.exports.updateProfile = async (req, res) => {
 
       console.log("DEBUG: Profile transporter created. Sending mail...");
       await transporter.sendMail({
-        from: process.env.SMTP_USER,
+        from: process.env.CONTACT_EMAIL_RECEIVER || process.env.SMTP_USER,
         to: user.email,
         subject: "Profile Updated",
         text: `Hi ${user.username},\n\nYour profile has been updated successfully.\n\nIf you did not make this change, please contact support.`,
@@ -277,7 +278,7 @@ module.exports.deleteAccount = async (req, res) => {
           },
         });
         await transporter.sendMail({
-          from: process.env.SMTP_USER,
+          from: process.env.CONTACT_EMAIL_RECEIVER || process.env.SMTP_USER,
           to: deletedUserEmail,
           subject: "Account Permanently Deleted",
           text: `Hi ${deletedUserName},\n\nYour account and all related data (listings, offers, bookings, reviews) have been permanently deleted as per your request. If you did not make this request, please contact support immediately.`,

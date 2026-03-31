@@ -182,7 +182,7 @@ const paymentSuccess = async (req, res) => {
         },
       });
       await transporter.sendMail({
-        from: process.env.SMTP_USER,
+        from: process.env.CONTACT_EMAIL_RECEIVER || process.env.SMTP_USER,
         to: userEmail,
         subject,
         text,
