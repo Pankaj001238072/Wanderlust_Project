@@ -162,6 +162,7 @@ module.exports.updateProfile = async (req, res) => {
   // Send email notification in background
   setImmediate(async () => {
     try {
+      console.log("DEBUG: Attempting to send profile update email via Brevo...");
       await Notification.create({
         user: user._id,
         message: "Your profile has been updated successfully.",
@@ -169,7 +170,7 @@ module.exports.updateProfile = async (req, res) => {
       });
 
       const transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST,
+        host: process.env.SMTP_HOST || "smtp-relay.brevo.com",
         port: parseInt(process.env.SMTP_PORT) || 587,
         secure: false,
         auth: {
@@ -177,13 +178,19 @@ module.exports.updateProfile = async (req, res) => {
           pass: process.env.SMTP_PASS,
         },
       });
+
+      console.log("DEBUG: Profile transporter created. Sending mail...");
       await transporter.sendMail({
         from: process.env.SMTP_USER,
         to: user.email,
         subject: "Profile Updated",
         text: `Hi ${user.username},\n\nYour profile has been updated successfully.\n\nIf you did not make this change, please contact support.`,
       });
-    } catch (e) {}
+      console.log("✅ Profile update email sent successfully.");
+    } catch (e) {
+      console.error("❌ Profile update email failed:", e.message);
+      console.error("DEBUG: Full error stack:", e.stack);
+    }
   });
 };
 
