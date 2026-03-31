@@ -71,10 +71,12 @@ router.post("/", async (req, res) => {
     setImmediate(async () => {
       try {
         const transporter = nodemailer.createTransport({
-          service: "gmail",
+          host: process.env.SMTP_HOST,
+          port: process.env.SMTP_PORT,
+          secure: false, // true for 465, false for other ports like 587
           auth: {
-            user: process.env.CONTACT_EMAIL_USER,
-            pass: process.env.CONTACT_EMAIL_PASS,
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS,
           },
         });
 
