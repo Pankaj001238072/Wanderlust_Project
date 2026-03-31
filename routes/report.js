@@ -80,7 +80,7 @@ router.post("/", async (req, res) => {
       try {
         const transporter = nodemailer.createTransport({
           host: process.env.SMTP_HOST,
-          port: process.env.SMTP_PORT,
+          port: parseInt(process.env.SMTP_PORT) || 587,
           secure: false, // true for 465, false for other ports like 587
           auth: {
             user: process.env.SMTP_USER,
@@ -89,7 +89,7 @@ router.post("/", async (req, res) => {
         });
 
         await transporter.sendMail({
-          from: `"Wanderlust Report" <${process.env.SMTP_USER}>`,
+          from: process.env.SMTP_USER,
           to: process.env.CONTACT_EMAIL_RECEIVER,
           subject: "🚨 New Report Submission",
           text: `New Report Received:\n\nReason: ${reason}\nDescription: ${description}\nEmail: ${email || "N/A"}`,
