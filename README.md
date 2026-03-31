@@ -1,6 +1,6 @@
 # Wanderlust Booking Platform
 
-Wanderlust is a full-stack web application for discovering and booking unique stays. Built using **Node.js, Express, MongoDB (Mongoose), EJS, and Bootstrap**, it integrates modern services like **Cloudinary (image storage), Stripe (payments), MapTiler (maps), and Nodemailer (emails)**.
+Wanderlust is a full-stack premium web application for discovering and booking unique stays. Built using **Node.js, Express, MongoDB (Mongoose), EJS, and Bootstrap**, it integrates modern services like **Cloudinary (image storage), Stripe (payments), MapTiler (maps), and Nodemailer (emails)**. It also features a custom-built **AI Assistant** powered by **Google Gemini**.
 
 
 
@@ -33,8 +33,11 @@ Wanderlust is a full-stack web application for discovering and booking unique st
 * **Offers & Discounts:** Owners create offers → subscribers notified
 * **Newsletter:** Footer-based subscription (SMTP-based)
 * **Contact & Report Forms:** Email-based support system
-* **Responsive UI:** Mobile-first modern design
-* **Demo User:** Optional credentials for testing
+* **Automated Maintenance:** Hourly `setInterval` logic in `app.js` to auto-delete expired offers and keep the DB clean.
+* **Responsive UI:** Mobile-first modern design with custom premium components and Glassmorphism effects.
+* **Performance:** Gzip response compression (`compression` middleware) and optimized static asset delivery.
+* **User Profile System:** Edit profile details, upload profile photos (locally processed), and view booking history.
+* **Demo User:** Single-click testing with pre-configured demo credentials.
 
 
 
@@ -42,24 +45,31 @@ Wanderlust is a full-stack web application for discovering and booking unique st
 
 ### Backend
 
-* Node.js
-* Express.js
-* MongoDB
-* Mongoose
+* Node.js (Runtime)
+* Express.js 5.x (Web Framework)
+* MongoDB (NoSQL Database)
+* Mongoose (ODM)
+* Passport.js (Authentication - Local Strategy)
+* Joi (Data Validation)
+* Sharp (Image Processing)
 
 ### Frontend
 
-* EJS
-* Bootstrap
-* Custom CSS
+* EJS (Templating Engine)
+* EJS-Mate (Layouts & Partials)
+* Bootstrap 5
+* Custom CSS3 (with Glassmorphism & Micro-animations)
+* HTML5 Semantic Elements
 
 ### Integrations
 
-* Stripe (payments)
-* Cloudinary (images)
-* MapTiler (maps)
-* Nodemailer (emails)
-* Google Gemini (AI Chatbot)
+* Stripe (Secure Payments)
+* Cloudinary (Image Hosting)
+* MapTiler (Interactive Geospatial Maps)
+* Nodemailer (SMTP Email Distribution)
+* Google Gemini 2.5 Flash (AI Intelligence)
+* Brevo (SMTP Relay Service)
+* Google reCAPTCHA v2 (Form Security)
 
 
 
