@@ -49,36 +49,43 @@ window.toggleHeart = async function (event, btn) {
   const icon = btn.querySelector("i");
 
   // Get CSRF token from meta tag
-  const csrfToken = document
-    .querySelector('meta[name="csrf-token"]')
-    .getAttribute("content");
+  const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+  const csrfToken = csrfMeta ? csrfMeta.getAttribute("content") : "";
 
+  // Understand current state
+  const isCurrentlyActive = btn.classList.contains("active");
+
+  // ⚡ Optimistic UI Update (Change instantly!)
+  if (isCurrentlyActive) {
+    btn.classList.remove("active");
+    icon.className = "fa-regular fa-heart";
+  } else {
+    btn.classList.add("active");
+    icon.className = "fa-solid fa-heart";
+  }
+
+  // Background Network Request
   try {
-    if (btn.classList.contains("active")) {
-      // ❌ REMOVE
-      await fetch(`/listings/${id}/wishlist`, {
-        method: "DELETE",
-        headers: {
-          "CSRF-Token": csrfToken,
-        },
-      });
+    const response = await fetch(`/listings/${id}/wishlist`, {
+      method: isCurrentlyActive ? "DELETE" : "POST",
+      headers: {
+        "CSRF-Token": csrfToken,
+      },
+    });
 
-      btn.classList.remove("active");
-      icon.className = "fa-regular fa-heart";
-    } else {
-      // ✅ ADD
-      await fetch(`/listings/${id}/wishlist`, {
-        method: "POST",
-        headers: {
-          "CSRF-Token": csrfToken,
-        },
-      });
-
-      btn.classList.add("active");
-      icon.className = "fa-solid fa-heart";
+    if (!response.ok) {
+      throw new Error("Server rejected wishlist update");
     }
   } catch (err) {
-    console.log(err);
-    alert("Please login first");
+    console.error("Wishlist toggle error:", err);
+    // ⏪ Revert UI update if network failed
+    if (isCurrentlyActive) {
+      btn.classList.add("active");
+      icon.className = "fa-solid fa-heart";
+    } else {
+      btn.classList.remove("active");
+      icon.className = "fa-regular fa-heart";
+    }
+    alert("Failed to update wishlist. Please try again or login first.");
   }
 };

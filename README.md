@@ -112,9 +112,9 @@ CLOUD_API_KEY=
 CLOUD_API_SECRET=
 
 SMTP_HOST=smtp-relay.brevo.com
-SMTP_PORT=587
-SMTP_USER=
-SMTP_PASS=
+SMTP_PORT=2525 # Use 2525 to bypass Render outbound SMTP blocks
+SMTP_USER=     # Your Brevo SMTP Login ID (NOT always your email)
+SMTP_PASS=     # Your Brevo SMTP Key (starts with xsmtpsib-)
 CONTACT_EMAIL_RECEIVER=
 
 PAYMENT_SESSION_TTL_MIN=30
