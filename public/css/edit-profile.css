@@ -93,7 +93,7 @@
     color: #888;
   }
   .edit-profile-btns {
-    margin-top: 0.1rem;
+    margin-top: 1rem;
     flex-direction: column;
     gap: 0.35rem;
     margin-bottom: 0.2rem;
@@ -189,6 +189,7 @@
     margin-bottom: 0.3rem;
   }
   .edit-profile-btns {
+    margin-top: 1rem;
     margin-bottom: 0.3rem;
   }
 }
@@ -236,7 +237,7 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-top: 0.5rem;
+  margin-top: 1rem;
   background: #fff;
 }
 .edit-profile-photo-preview img {
@@ -250,7 +251,7 @@
   display: flex;
   gap: 1rem;
   justify-content: center;
-  margin-top: -1rem;
+  margin-top: 1rem;
 }
 
 /* Save/Cancel button styles */
