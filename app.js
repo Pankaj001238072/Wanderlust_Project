@@ -88,7 +88,7 @@ const sessionOptions = {
     expires: Date.now() + 7 * 24 * 60 * 60 * 1000, // Set cookie to expire in 7 days
     maxAge: 7 * 24 * 60 * 60 * 1000, // Set max age of cookie to 7 days
     httpOnly: true, // Mitigate risk of client side script accessing the protected cookie(security purpose-> cross-site scripting attacks prevention)
-    sameSite: "lax",
+    sameSite: "lax", // Standard Lax setting for better compatibility across devices/IFrames
     secure: process.env.NODE_ENV === "production",
   },
 };

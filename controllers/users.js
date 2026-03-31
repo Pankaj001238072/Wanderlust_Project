@@ -50,7 +50,11 @@ module.exports.signup = async (req, res) => {
         return next(err);
       }
       req.flash("success", "Welcome to Wanderlust!");
-      res.redirect("/listings");
+      
+      // ✅ Explicitly save session before redirecting to ensure stability across devices (Fixes the "Ghost Flash" bug)
+      req.session.save(() => {
+        res.redirect("/listings");
+      });
     });
   } catch (e) {
     req.flash("error", e.message); // Setting an error flash message if there was an error during registration
@@ -65,20 +69,25 @@ module.exports.renderLoginForm = (req, res) => {
 
 // Handling user login logic
 module.exports.login = async (req, res) => {
-  req.flash("success", "Welcome back to Wanderlust!"); // Setting a success flash message upon successful login
-  let redirectUrl = res.locals.redirectUrl || "/listings"; // Redirecting to the original URL the user was trying to access before being redirected to login, or to the listings page if there is no redirectUrl
-  res.redirect(redirectUrl); //Redirecting to the determined redirect URL after successful login
+  req.flash("success", "Welcome back to Wanderlust!");
+  
+  // ✅ Explicitly save session before redirecting to ensure multi-device stability
+  req.session.save(() => {
+    let redirectUrl = res.locals.redirectUrl || "/listings";
+    res.redirect(redirectUrl);
+  });
 };
 
 // Handling user logout logic
 module.exports.logout = (req, res, next) => {
   req.logout((err) => {
-    // Calling the logout method provided by Passport to log the user out
-    if (err) {
-      return next(err); // If there is an error during logout, pass it to the next middleware
-    }
-    req.flash("success", "You are logged out!");
-    res.redirect("/listings");
+    if (err) return next(err);
+    
+    // ✅ Destroying the session and clearing the cookie for a fresh state on both devices
+    req.session.destroy(() => {
+      res.clearCookie("wanderlust.sid");
+      res.redirect("/listings");
+    });
   });
 };
 
