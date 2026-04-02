@@ -115,7 +115,7 @@
       <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
       <!-- Subscription Celebration Script -->
-      <% if (typeof justSubscribed !== 'undefined' && justSubscribed) { %>
+      <% if (typeof justSubscribed !=='undefined' && justSubscribed) { %>
         <script>
           document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
@@ -128,104 +128,104 @@
             }, 500);
           });
         </script>
-      <% } %>
+        <% } %>
 
-      <script src="/js/script.js"></script>
-      <script src="/js/form-submit-guard.js"></script>
-      <script src="/js/chatbot.js"></script>
+          <script src="/js/script.js"></script>
+          <script src="/js/form-submit-guard.js"></script>
+          <script src="/js/chatbot.js"></script>
 
 
-      <script>
-        // Toggle Password Visibility
-        document.addEventListener("DOMContentLoaded", () => {
-          const togglePasswords = document.querySelectorAll(".toggle-password");
-          togglePasswords.forEach(toggle => {
-            toggle.addEventListener("click", function() {
-              const input = this.parentElement.querySelector("input");
-              if (input && input.type === "password") {
-                input.type = "text";
-                this.classList.replace("fa-eye-slash", "fa-eye");
-              } else if (input) {
-                input.type = "password";
-                this.classList.replace("fa-eye", "fa-eye-slash");
-              }
+          <script>
+            // Toggle Password Visibility
+            document.addEventListener("DOMContentLoaded", () => {
+              const togglePasswords = document.querySelectorAll(".toggle-password");
+              togglePasswords.forEach(toggle => {
+                toggle.addEventListener("click", function () {
+                  const input = this.parentElement.querySelector("input");
+                  if (input && input.type === "password") {
+                    input.type = "text";
+                    this.classList.replace("fa-eye-slash", "fa-eye");
+                  } else if (input) {
+                    input.type = "password";
+                    this.classList.replace("fa-eye", "fa-eye-slash");
+                  }
+                });
+              });
             });
-          });
-        });
 
-        (() => {
+            (() => {
 
-          const tokenMeta = document.querySelector('meta[name="csrf-token"]');
-          const csrfToken = tokenMeta ? tokenMeta.getAttribute("content") : "";
+              const tokenMeta = document.querySelector('meta[name="csrf-token"]');
+              const csrfToken = tokenMeta ? tokenMeta.getAttribute("content") : "";
 
-          if (!csrfToken) return;
+              if (!csrfToken) return;
 
 
-          const isSameOriginAction = (action) => {
+              const isSameOriginAction = (action) => {
 
-            if (!action) return true;
+                if (!action) return true;
 
-            try {
+                try {
 
-              const actionUrl = new URL(action, window.location.origin);
-              return actionUrl.origin === window.location.origin;
+                  const actionUrl = new URL(action, window.location.origin);
+                  return actionUrl.origin === window.location.origin;
 
-            } catch (err) {
+                } catch (err) {
 
-              return true;
+                  return true;
 
-            }
+                }
 
-          };
-
-
-          const forms = document.querySelectorAll("form[method='POST'], form[method='post']");
-
-          forms.forEach((form) => {
-
-            if (!isSameOriginAction(form.getAttribute("action"))) return;
+              };
 
 
-            const encType = (form.getAttribute("enctype") || "").toLowerCase();
+              const forms = document.querySelectorAll("form[method='POST'], form[method='post']");
 
-            if (encType === "multipart/form-data") {
+              forms.forEach((form) => {
 
-              const actionValue =
-                form.getAttribute("action") ||
-                window.location.pathname + window.location.search;
-
-              const actionUrl = new URL(actionValue, window.location.origin);
-
-              actionUrl.searchParams.set("_csrf", csrfToken);
-
-              const relativeAction =
-                `${actionUrl.pathname}${actionUrl.search}${actionUrl.hash}`;
-
-              form.setAttribute("action", relativeAction);
-
-              return;
-
-            }
+                if (!isSameOriginAction(form.getAttribute("action"))) return;
 
 
-            const hasToken = form.querySelector("input[name='_csrf']");
+                const encType = (form.getAttribute("enctype") || "").toLowerCase();
 
-            if (hasToken) return;
+                if (encType === "multipart/form-data") {
+
+                  const actionValue =
+                    form.getAttribute("action") ||
+                    window.location.pathname + window.location.search;
+
+                  const actionUrl = new URL(actionValue, window.location.origin);
+
+                  actionUrl.searchParams.set("_csrf", csrfToken);
+
+                  const relativeAction =
+                    `${actionUrl.pathname}${actionUrl.search}${actionUrl.hash}`;
+
+                  form.setAttribute("action", relativeAction);
+
+                  return;
+
+                }
 
 
-            const input = document.createElement("input");
+                const hasToken = form.querySelector("input[name='_csrf']");
 
-            input.type = "hidden";
-            input.name = "_csrf";
-            input.value = csrfToken;
+                if (hasToken) return;
 
-            form.appendChild(input);
 
-          });
+                const input = document.createElement("input");
 
-        })();
+                input.type = "hidden";
+                input.name = "_csrf";
+                input.value = csrfToken;
 
-      </script>
+                form.appendChild(input);
+
+              });
+
+            })();
+
+          </script>
 
 </body>
 
