@@ -1,5 +1,13 @@
 const User = require("../models/user.js");
 const Notification = require("../models/notification.js");
+const Listing = require("../models/listing");
+const Offer = require("../models/offer");
+const Booking = require("../models/booking");
+const Review = require("../models/review");
+const Report = require("../models/report");
+const Subscriber = require("../models/subscriber");
+const Contact = require("../models/contact");
+const { deleteImage } = require("../helpers/cloudHelper");
 const nodemailer = require("nodemailer");
 const path = require("path");
 
@@ -216,45 +224,42 @@ module.exports.deleteAccount = async (req, res) => {
     } catch (e) {}
   }
 
-  // Delete all listings, offers, bookings, reviews related to this user
-  const Listing = require("../models/listing");
-  const Offer = require("../models/offer");
-  const Booking = require("../models/booking");
-  const Review = require("../models/review");
-  const { deleteImage } = require("../helpers/cloudHelper");
-
-  // Find all listings by this user
-  const userListings = await Listing.find({
-    owner: req.user._id,
-  });
+  // Find all listings by this user and map their IDs
+  const userListings = await Listing.find({ owner: req.user._id });
   const userListingIds = userListings.map((l) => l._id);
+
+  // Delete all listing images from Cloudinary
   for (const listing of userListings) {
     if (listing.image && listing.image.filename) {
       try {
         await deleteImage(listing.image.filename);
-      } catch (e) {}
+      } catch (e) {
+        console.error("Cloudinary listing deletion error:", e.message);
+      }
     }
   }
+
   // Delete all bookings where user is guest
   await Booking.deleteMany({ user: req.user._id });
-  // Delete all bookings for listings owned by this user (host)
+
+  // Delete all bookings for listings owned by this user (where user is host)
   if (userListingIds.length > 0) {
     await Booking.deleteMany({
       listing: { $in: userListingIds },
     });
   }
+
   await Listing.deleteMany({ owner: req.user._id });
   await Offer.deleteMany({ owner: req.user._id });
   await Review.deleteMany({ author: req.user._id });
   await Notification.deleteMany({ user: req.user._id });
 
-  // Delete reports, subscribers, contacts by user email
-  const Report = require("../models/report");
-  const Subscriber = require("../models/subscriber");
-  const Contact = require("../models/contact");
-  await Report.deleteMany({ email: req.user.email });
-  await Subscriber.deleteMany({ email: req.user.email });
-  await Contact.deleteMany({ email: req.user.email });
+  // Delete reports, subscribers, contacts by user email (Fallback check)
+  if (req.user.email) {
+    await Report.deleteMany({ email: req.user.email });
+    await Subscriber.deleteMany({ email: req.user.email });
+    await Contact.deleteMany({ email: req.user.email });
+  }
 
   // Store user email and username before deleting
   const deletedUserEmail = req.user.email;

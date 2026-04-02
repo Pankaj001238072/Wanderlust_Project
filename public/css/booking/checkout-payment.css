@@ -37,6 +37,7 @@
   margin-top: 0.25rem !important;
   padding-top: 0.48rem;
   padding-bottom: 0.48rem;
+  border-radius: 0.75rem;
 }
 
 @media (max-width: 575px) {
