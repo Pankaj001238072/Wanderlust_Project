@@ -126,17 +126,17 @@ This project started as a learning journey, but I extended it by adding multiple
 
 ## 📂 Project Structure
 
+```
 MAJORPROJECT/
 ├── controllers/
 ├── helpers/
 ├── init/
 ├── middlewares/
 ├── models/
-├── node_modules/
 ├── public/
 ├── routes/
 ├── schemas/
-├── screenshots/   
+├── screenshots/
 ├── tests/
 ├── uploads/
 ├── utils/
@@ -147,23 +147,26 @@ MAJORPROJECT/
 ├── middleware.js
 ├── schema.js
 ├── package.json
-├── README.md
+└── README.md
+```
 
 ---
 
 ## 🚀 Setup Instructions
 
-### 1️⃣ Clone Repo
-
+### 1️⃣ Clone Repository
+```bash
 git clone https://github.com/Pankaj001238072/Wanderlust_Project.git
 cd Wanderlust_Project
+```
 
 ### 2️⃣ Install Dependencies
-
+```bash
 npm install
+```
 
 ### 3️⃣ Create .env File
-
+```env
 ATLASDB_URL=
 SESSION_SECRET=
 STRIPE_SECRET_KEY=
@@ -178,13 +181,14 @@ SMTP_USER=
 SMTP_PASS=
 PAYMENT_SESSION_TTL_MIN=
 GEMINI_API_KEY=
+```
 
 ### 4️⃣ Run Project
-
+```bash
 npm start
+```
 
 👉 Open: http://localhost:8080
-
 ---
 
 ## 📈 Future Improvements
