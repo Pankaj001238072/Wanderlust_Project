@@ -58,11 +58,7 @@ module.exports.signup = async (req, res) => {
         return next(err);
       }
       req.flash("success", "Welcome to Wanderlust!");
-      
-      // ✅ Explicitly save session before redirecting to ensure stability across devices (Fixes the "Ghost Flash" bug)
-      req.session.save(() => {
-        res.redirect("/listings");
-      });
+      res.redirect("/listings");
     });
   } catch (e) {
     req.flash("error", e.message); // Setting an error flash message if there was an error during registration
@@ -78,12 +74,8 @@ module.exports.renderLoginForm = (req, res) => {
 // Handling user login logic
 module.exports.login = async (req, res) => {
   req.flash("success", "Welcome back to Wanderlust!");
-  
-  // ✅ Explicitly save session before redirecting to ensure multi-device stability
-  req.session.save(() => {
-    let redirectUrl = res.locals.redirectUrl || "/listings";
-    res.redirect(redirectUrl);
-  });
+  let redirectUrl = res.locals.redirectUrl || "/listings";
+  res.redirect(redirectUrl);
 };
 
 // Handling user logout logic
@@ -91,11 +83,8 @@ module.exports.logout = (req, res, next) => {
   req.logout((err) => {
     if (err) return next(err);
     
-    // ✅ Destroying the session and clearing the cookie for a fresh state on both devices
-    req.session.destroy(() => {
-      res.clearCookie("wanderlust.sid");
-      res.redirect("/listings");
-    });
+    req.flash("success", "You are logged out!");
+    res.redirect("/listings");
   });
 };
 
