@@ -5,6 +5,9 @@
 [![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge\&logo=mongodb\&logoColor=white)](https://www.mongodb.com/)
 [![Gemini AI](https://img.shields.io/badge/Google_Gemini-8E75B2?style=for-the-badge\&logo=google\&logoColor=white)](https://aistudio.google.com/)
 [![Stripe](https://img.shields.io/badge/Stripe-635BFF?style=for-the-badge\&logo=stripe\&logoColor=white)](https://stripe.com/)
+[![MapTiler](https://img.shields.io/badge/MapTiler-0078A8?style=for-the-badge&logo=map&logoColor=white)](https://www.maptiler.com/)
+[![Cloudinary](https://img.shields.io/badge/Cloudinary-000000?style=for-the-badge&logo=cloudinary&logoColor=white)](https://cloudinary.com/)
+[![Bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)](https://getbootstrap.com/)
 
 🌐 **Live Demo:** https://wanderlust-project-nhvd.onrender.com
 📌 **GitHub Repo:** https://github.com/Pankaj001238072/Wanderlust_Project
@@ -29,26 +32,31 @@ This project started as a learning journey, but I extended it by adding multiple
 ## 📸 Screenshots
 
 ### 🏠 Home Page
-
 ![Home](screenshots/home.png)
 
-### 🔍 Search & Listings
+### 📝 Signup Page
+![Signup](screenshots/signup.png)
 
+### 🔐 Login Page
+![Login](screenshots/login.png)
+
+### ❤️ Wishlist
+![Wishlist](screenshots/wishlist.png)
+
+
+### 🔍 Search & Listings
 ![Listings](screenshots/listing.png)
 
 ### 💳 Booking Flow
-
 ![Booking](screenshots/booking.png)
 
 ### 🤖 AI Travel Assistant
-
 ![AI](screenshots/ai.png)
 
 ---
 
 ## 🎥 Demo Video
-
-👉 (Add your video link here)
+👉 https://res.cloudinary.com/dxn4y5zlg/video/upload/v1775211521/wanderlust_video_xjsvrq.mp4
 
 ---
 
@@ -118,15 +126,27 @@ This project started as a learning journey, but I extended it by adding multiple
 ## 📂 Project Structure
 
 MAJORPROJECT/
-├── app.js
 ├── controllers/
-├── models/
-├── routes/
+├── helpers/
+├── init/
 ├── middlewares/
-├── views/
+├── models/
+├── node_modules/
 ├── public/
+├── routes/
+├── schemas/
+├── screenshots/   
+├── tests/
 ├── uploads/
-└── README.md
+├── utils/
+├── views/
+├── .env
+├── app.js
+├── cloudConfig.js
+├── middleware.js
+├── schema.js
+├── package.json
+├── README.md
 
 ---
 
