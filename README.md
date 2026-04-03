@@ -9,8 +9,9 @@
 [![Cloudinary](https://img.shields.io/badge/Cloudinary-000000?style=for-the-badge&logo=cloudinary&logoColor=white)](https://cloudinary.com/)
 [![Bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)](https://getbootstrap.com/)
 
-🌐 **Live Demo:** https://wanderlust-project-nhvd.onrender.com
-📌 **GitHub Repo:** https://github.com/Pankaj001238072/Wanderlust_Project
+🌐 **🚀Try it Live:** https://wanderlust-project-nhvd.onrender.com  
+
+📌 **GitHub Repository:** https://github.com/Pankaj001238072/Wanderlust_Project
 
 ---
 
