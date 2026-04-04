@@ -78,15 +78,25 @@
 .footer-socials {
   display: flex;
   align-items: center;
+  flex-wrap: wrap; /* Icons wrap to next line if space is low */
   gap: 0.75rem;
   margin-bottom: 0.4rem;
-  padding-left: 1rem;
 }
 
 .footer-socials a {
   color: #222;
   font-size: 1.5rem;
   transition: transform 0.2s ease, color 0.2s ease;
+}
+
+/* For small screens like mobile */
+@media (max-width: 480px) {
+  .footer-socials {
+    gap: 0.5rem; 
+  }
+  .footer-socials a {
+    font-size: 1.3rem; 
+  }
 }
 
 .footer-socials a:hover {

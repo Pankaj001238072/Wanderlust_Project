@@ -203,7 +203,7 @@ module.exports.updateProfile = async (req, res) => {
 
 // Handle account deletion (delete Cloudinary photo if exists)
 module.exports.deleteAccount = async (req, res) => {
-  const user = await User.findById(req.user._id);
+  const user = await User.findById(req.user._id).lean();
   // Delete photo from Cloudinary if exists
   if (user && user.photoPublicId) {
     try {
@@ -214,7 +214,7 @@ module.exports.deleteAccount = async (req, res) => {
   }
 
   // Find all listings by this user and map their IDs
-  const userListings = await Listing.find({ owner: req.user._id });
+  const userListings = await Listing.find({ owner: req.user._id }).lean();
   const userListingIds = userListings.map((l) => l._id);
 
   // Delete all listing images from Cloudinary

@@ -32,7 +32,7 @@
                                         style="margin-right:8px; padding: 8px 16px; border-radius: 10px; font-size: 15px; cursor: pointer;">View
                                         Listing</a>
                                     <% } %>
-                                        <% if (currUser && offer.owner && offer.owner.equals(currUser._id)) { %>
+                                        <% if (currUser && offer.owner && String(offer.owner) === String(currUser._id)) { %>
                                             <form action="/offer/<%= offer._id %>/delete" method="POST"
                                                 style="display:inline;">
                                                 <button type="submit" class="btn-delete-offer"

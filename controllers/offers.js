@@ -7,7 +7,7 @@ exports.createOffer = async (req, res) => {
   try {
     const { discount, validTill, listing } = req.body;
     // Check if listing exists
-    const listingObj = await Listing.findById(listing);
+    const listingObj = await Listing.findById(listing).lean();
     if (!listingObj) {
       req.flash("error", "Listing not found!");
       return res.redirect("/offer/new");
@@ -26,7 +26,7 @@ exports.createOffer = async (req, res) => {
     setImmediate(async () => {
       try {
         const Subscriber = require("../models/subscriber");
-        const subscribers = await Subscriber.find({}, "email");
+        const subscribers = await Subscriber.find({}, "email").lean();
         const transporter = nodemailer.createTransport({
           host: process.env.SMTP_HOST || "smtp-relay.brevo.com",
           port: process.env.SMTP_PORT == '465' ? 2525 : (parseInt(process.env.SMTP_PORT) || 2525),
@@ -70,7 +70,7 @@ exports.listOffers = async (req, res) => {
   // Only show offers whose listing exists
   const offers = await Offer.find({
     validTill: { $gte: now },
-  }).populate("listing");
+  }).populate("listing").lean();
   const filteredOffers = offers.filter(
     (offer) => offer.listing,
   );

@@ -5,45 +5,53 @@ const User = require("../../models/user");
 
 const index = async (req, res) => {
   const filter = {};
-
-  if (req.query.search) {
-    const searchQuery = req.query.search.trim(); // Trim spaces for mobile keyboards
-    filter.$or = [
-      {
-        location: {
-          $regex: searchQuery,
-          $options: "i",
-        },
-      },
-      {
-        country: {
-          $regex: searchQuery,
-          $options: "i",
-        },
-      },
-    ];
-  }
+  let allListings;
 
   if (req.query.category) {
     filter.category = req.query.category;
   }
 
-  const allListings = await Listing.find(filter).lean();
+  if (req.query.search) {
+    const searchQuery = req.query.search.trim();
+    
+    // Using MongoDB Atlas Search (Lucene) for high-performance searching
+    const pipeline = [
+      {
+        $search: {
+          index: "default", // The index name you created in Atlas
+          text: {
+            query: searchQuery,
+            path: ["location", "country", "title"], // Searching across these fields
+            fuzzy: { maxEdits: 1 } // Allows minor spelling mistakes
+          }
+        }
+      }
+    ];
 
- // ✅ WISHLIST LOGIC
+    // If a category filter is also applied, add it to the pipeline
+    if (filter.category) {
+      pipeline.push({ $match: { category: filter.category } });
+    }
+
+    allListings = await Listing.aggregate(pipeline);
+  } else {
+    // Normal find query with lean for performance
+    allListings = await Listing.find(filter).lean();
+  }
+
+  // ✅ WISHLIST LOGIC
   let wishlistIds = [];
 
   if (req.user) {
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(req.user._id).lean(); // Added .lean() here
     wishlistIds = user.wishlist.map(id => id.toString());
   }
 
-
-// Rendering the index.ejs template and passing the filtered listings and selected category to the template for display
+  // Rendering the index.ejs template and passing the filtered listings and selected category to the template for display
   res.render("listings/index.ejs", { 
     allListings,
     selectedCategory: req.query.category || null,
-        wishlistIds, // ✅ PASS TO FRONTEND
+    wishlistIds, // ✅ PASS TO FRONTEND
   });
 };
 
@@ -65,7 +73,8 @@ const showListing = async (req, res) => {
       path: "reviews",
       populate: { path: "author" },
     })
-    .populate("owner");
+    .populate("owner")
+    .lean(); // Added .lean() 
 
   if (!listing) {
     req.flash(
@@ -100,7 +109,7 @@ const showListing = async (req, res) => {
       checkOut: { $gte: today },
     }).sort({ createdAt: -1 });
 
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(req.user._id).lean(); // Added .lean() 
     isWishlisted = user.wishlist.some(id => id.toString() === listing._id.toString());
   }
 
@@ -138,7 +147,7 @@ const renderEditForm = async (req, res) => {
 };
 
 const userWishlist = async (req, res) => {
-  const user = await User.findById(req.user._id).populate("wishlist");
+  const user = await User.findById(req.user._id).populate("wishlist").lean(); // Added .lean() 
   const allListings = user.wishlist;
   const wishlistIds = allListings.map((listing) => listing._id.toString());
 
