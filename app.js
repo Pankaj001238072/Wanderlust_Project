@@ -261,7 +261,7 @@ setInterval(
   60 * 60 * 1000,
 ); // Every hour
 
-app.listen(8080, () => {
-  // Starting the server on port 8080
-  console.log("Server is listening to port 8080");
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+  console.log(`Server is listening on port ${PORT}`);
 });
