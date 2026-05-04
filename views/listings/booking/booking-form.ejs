@@ -1,6 +1,7 @@
 <% const minDate=new Date().toISOString().split("T")[0]; %>
 
     <form action="/listings/<%= listing._id %>/bookings" method="POST" id="bookingForm">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
         <div class="row g-3">
             <div class="col-md-3 booking-date-col">
                 <label for="checkIn" class="form-label">Check-in</label>
@@ -11,6 +12,11 @@
                 <label for="checkOut" class="form-label">Check-out</label>
                 <input type="date" id="checkOut" name="booking[checkOut]" class="form-control" min="<%= minDate %>"
                     required>
+            </div>
+        </div>
+        <div class="row mt-1">
+            <div class="col-12">
+                <small id="bookingDateError" class="text-danger d-none" style="font-weight: 500;"></small>
             </div>
         </div>
         <div class="row g-3 mt-1">
@@ -93,8 +99,5 @@
             <div class="col-md-2 d-flex align-items-end booking-submit-col">
                 <button class="btn btn-dark pay-book-btn">Pay & Book</button>
             </div>
-        </div>
-        <div class="col-12">
-            <small id="bookingDateError" class="text-danger d-none"></small>
         </div>
     </form>

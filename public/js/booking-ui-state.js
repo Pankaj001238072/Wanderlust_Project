@@ -9,6 +9,7 @@ window.ListingBookingState = (ctx) => {
     baseGuests,
     extraGuestFeePerNight,
     nightlyPrice,
+    offerPercent,
     gstRate,
     guestPopover,
     guestSummaryText,
@@ -108,7 +109,8 @@ window.ListingBookingState = (ctx) => {
       maxGuests,
       baseGuests,
       extraGuestFeePerNight,
-      nightlyPrice,
+      nightlyPrice: ctx.nightlyPrice,
+      offerPercent: ctx.offerPercent,
       gstRate,
     });
     if (!summary.show) {
@@ -192,9 +194,28 @@ window.ListingBookingState = (ctx) => {
       prev.pets !== state.pets;
     updateGuestStateUI();
   };
+  const updatePriceDetails = (data) => {
+    ctx.nightlyPrice = Number(data.finalPrice);
+    ctx.offerPercent = Number(data.offerPercent || 0);
+    
+    // Update Badges in Summary Card
+    if (summaryPricingFactors && summaryBadgesList) {
+      if (data.breakdown && data.breakdown.length > 0) {
+        summaryPricingFactors.style.display = "block";
+        summaryBadgesList.innerHTML = data.breakdown.map(b => 
+          `<span class="badge bg-${b.color || 'secondary'} small text-white" style="font-size:0.65rem; padding: 3px 6px;">${b.label} ${b.change}</span>`
+        ).join("");
+      } else {
+        summaryPricingFactors.style.display = "none";
+      }
+    }
+    
+    updateDateAndPriceSummary();
+  };
   return {
     updateCount,
     updateGuestStateUI,
     updateDateAndPriceSummary,
+    updatePriceDetails,
   };
 };

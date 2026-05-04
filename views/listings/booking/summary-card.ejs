@@ -1,9 +1,18 @@
-<div id="bookingSummaryCard" class="card mt-3 booking-summary-card d-none">
+<div id="bookingSummaryCard" class="card mt-3 booking-summary-card d-none" style="border: 1px solid #ff385c; background: #fffcfc;">
     <div class="card-body p-3">
-        <h6 class="mb-2">Booking Summary</h6>
-        <p class="mb-1"><b>Dates:</b> <span id="summaryDates">-</span></p>
-        <p class="mb-1"><b>Nights:</b> <span id="summaryNights">0</span></p>
-        <p class="mb-1"><b>Guests:</b> <span id="summaryGuests">1 adult, 0 children, 0 infants, 0 pets</span></p>
-        <p class="mb-0"><b>Estimated Total (incl. 18% GST):</b> &#8377; <span id="summaryTotal">0</span></p>
+        <h6 class="mb-2 fw-bold text-dark">Booking Summary</h6>
+        <p class="mb-1 small"><b>Dates:</b> <span id="summaryDates">-</span></p>
+        <p class="mb-1 small"><b>Nights:</b> <span id="summaryNights">0</span></p>
+        <p class="mb-1 small"><b>Guests:</b> <span id="summaryGuests">1 adult</span></p>
+        
+        <div id="summaryPricingFactors" class="mt-2 pt-2 border-top" style="display:none;">
+            <p class="mb-1 small text-muted"><b>Applied Pricing Factors:</b></p>
+            <div id="summaryBadgesList" class="d-flex flex-wrap gap-1 mb-2"></div>
+        </div>
+
+        <div class="mt-2 pt-2 border-top d-flex justify-content-between align-items-center">
+            <span class="small fw-bold">Estimated Total <br><small class="text-muted fw-normal">(incl. 18% GST)</small></span>
+            <span class="fs-5 fw-bold text-dark">&#8377; <span id="summaryTotal">0</span></span>
+        </div>
     </div>
 </div>

@@ -7,19 +7,16 @@
         <h3 class="mb-0">My Bookings</h3>
 
         <% if (bookings.length> 0) { %>
-          <% const confirmedCount=bookings.filter((booking)=> booking.status === "confirmed").length; %>
-            <% const cancelledCount=bookings.filter((booking)=> booking.status !== "confirmed").length; %>
+          <% const confirmedCount=bookings.filter((b)=> b.status === "confirmed").length; %>
+            <% const pendingCount=bookings.filter((b)=> b.status === "pending_split").length; %>
+              <% const cancelledCount=bookings.filter((b)=> b.status === "cancelled").length; %>
 
-              <div class="d-flex align-items-center gap-2">
-                <span class="badge rounded-2 text-bg-success">
-                  Confirmed: <%= confirmedCount %>
-                </span>
-
-                <span class="badge rounded-2 text-bg-danger">
-                  Cancelled: <%= cancelledCount %>
-                </span>
-              </div>
-              <% } %>
+                <div class="d-flex align-items-center gap-2">
+                  <span class="badge rounded-2 text-bg-success">Confirmed: <%= confirmedCount %></span>
+                  <span class="badge rounded-2 text-bg-warning">Pending: <%= pendingCount %></span>
+                  <span class="badge rounded-2 text-bg-danger">Cancelled: <%= cancelledCount %></span>
+                </div>
+                <% } %>
       </div>
 
 
@@ -107,17 +104,21 @@
 
                                       <div class="booking-meta mb-3">
 
-                                        <p class="card-text mb-1">
-                                          <b>Check-in:</b>
-                                          <%= new Date(booking.checkIn).toLocaleDateString("en-IN") %>
-                                        </p>
-
-                                        <p class="card-text mb-1">
-                                          <b>Check-out:</b>
-                                          <%= new Date(booking.checkOut).toLocaleDateString("en-IN") %>
-                                        </p>
-
-                                        <p class="card-text mb-1">
+                            <div class="booking-dates-row d-flex align-items-center justify-content-between p-2 rounded mb-3" style="background: #f8f9fa; gap: 5px;">
+                              <div class="text-center flex-grow-1">
+                                <div class="small text-muted" style="font-size: 0.75rem;">Check-in</div>
+                                <div class="fw-bold" style="font-size: 0.85rem;"><%= new Date(booking.checkIn).toLocaleDateString("en-IN") %></div>
+                                <div class="text-muted" style="font-size: 0.65rem;">after 1:00 PM</div>
+                              </div>
+                              <div class="px-1">
+                                <i class="fa-solid fa-arrow-right-long text-muted small"></i>
+                              </div>
+                              <div class="text-center flex-grow-1">
+                                <div class="small text-muted" style="font-size: 0.75rem;">Check-out</div>
+                                <div class="fw-bold" style="font-size: 0.85rem;"><%= new Date(booking.checkOut).toLocaleDateString("en-IN") %></div>
+                                <div class="text-muted" style="font-size: 0.65rem;">before 11:00 AM</div>
+                              </div>
+                            </div>            <p class="card-text mb-1">
                                           <b>Total:</b>
                                           ₹ <%= booking.totalPrice.toLocaleString("en-IN") %>
                                         </p>
@@ -145,10 +146,19 @@
                                         <p class="card-text mb-0 d-flex align-items-center gap-2">
                                           <b>Status:</b>
 
-                                          <span
-                                            class="badge rounded-pill <%= booking.status === 'confirmed' ? 'text-bg-success' : 'text-bg-danger' %>">
-                                            <%= booking.status %>
-                                          </span>
+                                          <% if (booking.status==='pending_split' ) { %>
+                                            <a href="/split/<%= booking._id %>/split-details"
+                                              class="text-decoration-none">
+                                              <span class="badge rounded-pill text-bg-warning">
+                                                <i class="fa-solid fa-users me-1"></i> Pending Group Payment
+                                              </span>
+                                            </a>
+                                            <% } else { %>
+                                              <span
+                                                class="badge rounded-pill <%= booking.status === 'confirmed' ? 'text-bg-success' : 'text-bg-danger' %>">
+                                                <%= booking.status %>
+                                              </span>
+                                              <% } %>
 
                                         </p>
 
@@ -174,8 +184,9 @@
                                                   <% const checkInCutoffAt=new Date(bookingCheckIn.getTime() -
                                                     CANCEL_CUTOFF_MS); %>
 
-                                                    <% const canCancel=booking.status==="confirmed" && (now
-                                                      <=graceWindowEndsAt || now <=checkInCutoffAt); %>
+                                                    <% const canCancel=(booking.status==="confirmed" ||
+                                                      booking.status==="pending_split" ) && (now <=graceWindowEndsAt ||
+                                                      now <=checkInCutoffAt); %>
 
 
                                                       <% if (canCancel) { %>

@@ -1,0 +1,79 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="row mt-3 mb-4">
+    <div class="col-lg-5 offset-lg-3 mx-auto">
+        <div class="card shadow-sm border-0" style="border-radius: 16px;">
+            <div class="p-2 p-md-4 text-center">
+                <div class="bg-light p-3 rounded-4">
+                    <div class="mb-3">
+                        <i class="fa-solid fa-circle-check text-success" style="font-size: 2.5rem;"></i>
+                    </div>
+                    <h4 class="fw-bold mb-1">Your Share Paid!</h4>
+                    <p class="text-muted small mb-0">Your payment of ₹<%= split.amountPerPerson.toLocaleString("en-IN") %> was successful.<br>Your stay is temporarily blocked.</p>
+                </div>
+
+                <% if (typeof minutesRemaining !== 'undefined' && minutesRemaining !== null) { %>
+                <div class="alert alert-warning py-2 mb-0 mt-3 border-0 text-start" style="background: #fff4e6; color: #d9480f; font-size: 0.8rem; border-radius: 12px;">
+                    <i class="fa-solid fa-clock-rotate-left me-1"></i>
+                    <b>Urgent Stay:</b> Since your stay is for today, please ensure all friends pay within <b><%= minutesRemaining %> minutes</b>. After this, same-day bookings are automatically cancelled to release the dates.
+                </div>
+                <% } %>
+
+                <hr class="my-3">
+
+                <div class="bg-light p-3 rounded-4 mb-3 text-start">
+                    <!-- QR Code Section -->
+                    <div class="text-center mb-3">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=<%= encodeURIComponent(baseUrl + '/split/pay/' + split.paymentToken) %>" 
+                             alt="QR Code" class="img-fluid shadow-sm border p-2 bg-white rounded-3" style="width: 120px; height: 120px;">
+                        <p class="small text-muted mt-2 mb-0 fw-bold"><i class="fa-solid fa-qrcode me-1"></i> Scan to pay share</p>
+                    </div>
+
+                    <h6 class="text-uppercase small fw-bold text-muted mb-2" style="font-size: 0.75rem;">Or share this link with <%= split.splitWays - 1 %> friends</h6>
+                    <div class="input-group input-group-sm mb-2">
+                        <input type="text" class="form-control bg-white border-end-0" id="shareLink" 
+                               value="<%= baseUrl %>/split/pay/<%= split.paymentToken %>" readonly>
+                        <button class="btn border border-start-0 bg-white text-muted" style="border-color: #ced4da !important;" onclick="copyLink(this)" title="Copy link">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </div>
+                    <p class="mt-1 mb-0 text-muted" style="font-size: 0.75rem;">Booking confirms when remaining ₹<%= (split.totalAmount - split.amountPerPerson).toLocaleString("en-IN") %> is paid.</p>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <a href="https://wa.me/?text=Hey! I've booked a stay at <%= booking.listing.title %>. Click here to pay your share so we can confirm the booking: <%= baseUrl %>/split/pay/<%= split.paymentToken %>" 
+                       target="_blank" 
+                       class="btn btn-success py-2 fw-bold rounded-3" style="background-color: #25D366; border: none; font-size: 0.9rem;">
+                        <i class="fa-brands fa-whatsapp me-2"></i> Share on WhatsApp
+                    </a>
+                    <a href="/bookings/my" class="btn w-100 py-2 rounded-3 text-muted border btn-cancel-hover mt-1" style="font-size: 0.95rem; text-decoration: none; transition: background-color 0.2s ease;">Go to My Bookings</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function copyLink(btn) {
+        const copyText = document.getElementById("shareLink");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(copyText.value);
+        
+        if(btn) {
+            const icon = btn.querySelector('i');
+            if(icon) {
+                icon.className = 'fa-solid fa-check text-success';
+                setTimeout(() => { icon.className = 'fa-regular fa-copy'; }, 2000);
+            }
+        }
+    }
+</script>
+
+<style>
+    .btn-cancel-hover:hover {
+        background-color: #6c757d !important;
+        color: #fff !important;
+        border-color: #6c757d !important;
+    }
+</style>

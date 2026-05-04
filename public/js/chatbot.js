@@ -84,4 +84,52 @@ document.addEventListener("DOMContentLoaded", () => {
   chatInput.addEventListener("keypress", (e) => {
     if (e.key === "Enter") sendMessage();
   });
+
+  // 🎤 Speech Recognition Logic
+  const micBtn = document.getElementById("aiChatMicBtn");
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (SpeechRecognition && micBtn) {
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.lang = 'en-US';
+    recognition.interimResults = true;
+
+    micBtn.addEventListener("click", () => {
+      if (micBtn.classList.contains("listening")) {
+        recognition.stop();
+      } else {
+        try {
+          recognition.start();
+        } catch (e) {
+          console.error("Speech recognition already started");
+        }
+      }
+    });
+
+    recognition.onstart = () => {
+      micBtn.classList.add("listening");
+      chatInput.placeholder = "Listening...";
+    };
+
+    recognition.onend = () => {
+      micBtn.classList.remove("listening");
+      chatInput.placeholder = "Ask me anything...";
+    };
+
+    recognition.onresult = (event) => {
+      let transcript = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        transcript += event.results[i][0].transcript;
+      }
+      chatInput.value = transcript;
+    };
+
+    recognition.onerror = (event) => {
+      console.error("Speech recognition error:", event.error);
+      micBtn.classList.remove("listening");
+    };
+  } else if (micBtn) {
+    micBtn.style.display = "none"; // Hide mic if not supported
+  }
 });

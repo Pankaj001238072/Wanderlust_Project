@@ -10,7 +10,7 @@ exports.createOffer = async (req, res) => {
     const listingObj = await Listing.findById(listing).lean();
     if (!listingObj) {
       req.flash("error", "Listing not found!");
-      return res.redirect("/offer/new");
+      return req.session.save(() => res.redirect("/listings"));
     }
     const offer = new Offer({
       title: listingObj.title,

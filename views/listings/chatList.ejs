@@ -1,0 +1,55 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <div class="card shadow-sm border-0" style="border-radius: 20px;">
+        <div class="card-header bg-white border-0 py-4">
+          <h3 class="fw-bold mb-0" style="color: #ff385c;">Negotiation Chats</h3>
+          <p class="text-muted small mb-0"><%= listing.title %></p>
+        </div>
+        <div class="card-body p-0">
+          <% if (chats && chats.length > 0) { %>
+            <div class="list-group list-group-flush">
+              <% chats.forEach(chat => { %>
+                <a href="/listings/<%= listing._id %>/chat/<%= chat.guest._id %>" 
+                   class="list-group-item list-group-item-action py-3 px-4 d-flex align-items-center justify-content-between border-0 border-bottom <%= chat.unreadByHost ? 'bg-light-blue' : '' %>">
+                  <div class="d-flex align-items-center">
+                    <img src="<%= (chat.guest.photo && chat.guest.photo.url) ? chat.guest.photo.url : 'https://cdn-icons-png.flaticon.com/512/149/149071.png' %>" 
+                         class="rounded-circle me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                    <div>
+                      <div class="d-flex align-items-center mb-1">
+                        <h6 class="mb-0 <%= chat.unreadByHost ? 'fw-bold text-primary' : 'fw-bold text-dark' %>"><%= chat.guest.username %></h6>
+                        <% if (chat.unreadByHost) { %>
+                          <span class="ms-2" style="width: 8px; height: 8px; background-color: #0084ff; border-radius: 50%; display: inline-block;"></span>
+                        <% } %>
+                      </div>
+                      <p class="mb-0 <%= chat.unreadByHost ? 'text-dark fw-bold' : 'text-muted' %> small">
+                        <%= chat.messages.length %> messages · Last update: <%= new Date(chat.lastUpdated).toLocaleDateString() %>
+                      </p>
+                    </div>
+                  </div>
+                  <i class="fa-solid fa-chevron-right text-muted small"></i>
+                </a>
+              <% }) %>
+            </div>
+          <% } else { %>
+            <div class="text-center py-5">
+              <img src="https://cdn-icons-png.flaticon.com/512/4076/4076432.png" style="width: 100px; opacity: 0.3;" class="mb-3">
+              <h5 class="text-muted">No active negotiations yet</h5>
+              <p class="small text-muted">When guests message you about this listing, they will appear here.</p>
+              <a href="/listings/<%= listing._id %>" class="btn btn-outline-secondary btn-sm mt-3 rounded-pill">Back to Listing</a>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .bg-light-blue {
+    background-color: #f0f7ff !important;
+    border-left: 4px solid #0084ff !important;
+  }
+</style>

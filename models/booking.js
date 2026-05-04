@@ -41,6 +41,35 @@ const bookingSchema = new Schema({
     min: 0,
   },
   totalPrice: Number,
+
+  // 🎁 Selected Add-on Experiences
+  addOns: [
+    {
+      name:  { type: String },
+      price: { type: Number },
+      icon:  { type: String },
+    },
+  ],
+  addOnsTotal: { type: Number, default: 0 },
+
+  // 💸 Wallet Coins Redeemed
+  walletCoinsUsed: { type: Number, default: 0 },
+  walletDiscount:  { type: Number, default: 0 },
+
+  // 👥 Split Booking Reference
+  splitBooking: {
+    type:    mongoose.Schema.Types.ObjectId,
+    ref:     "SplitBooking",
+    default: null,
+  },
+
+  // 📊 Dynamic Pricing Breakdown (for audit/display)
+  pricingBreakdown: [
+    {
+      label:  { type: String },
+      change: { type: String },
+    },
+  ],
   paymentStatus: {
     type: String,
     enum: ["paid", "failed"],
@@ -56,8 +85,12 @@ const bookingSchema = new Schema({
   },
   status: {
     type: String,
-    enum: ["confirmed", "cancelled"],
+    enum: ["confirmed", "cancelled", "pending_split"],
     default: "confirmed",
+  },
+  negotiatedOfferId: {
+    type: String,
+    default: null,
   },
   createdAt: {
     type: Date,

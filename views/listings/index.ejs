@@ -29,11 +29,330 @@
             <span>Top Rated</span>
           </a>
 
+          <!-- ☀️ Weather Search Chip -->
+          <button id="wl-weather-btn" class="wl-banner__chip" onclick="event.stopPropagation(); wlWeatherToggle();">
+            <i class="fa-solid fa-cloud-sun"></i>
+            <span>Weather Search</span>
+          </button>
+
+          <!-- 📍 Near Me Chip -->
+          <button id="wl-near-btn" class="wl-banner__chip" onclick="event.stopPropagation(); wlNearMe();">
+            <i class="fa-solid fa-location-crosshairs"></i>
+            <span>Near Me</span>
+          </button>
+
+        </div>
+
+        <!-- Weather Widget — hidden initially, shown by JS -->
+        <div id="wl-weather-widget"
+          style="display:none; margin-top:1.2rem; max-width:480px; margin-left:auto; margin-right:auto;">
+          <div style="background:rgba(255,255,255,0.2); backdrop-filter:blur(16px);
+                      -webkit-backdrop-filter:blur(16px); border-radius:18px; padding:1rem 1.2rem;
+                      box-shadow:0 4px 24px rgba(0,0,0,.15);" onclick="event.stopPropagation();">
+            <div style="display:flex; gap:.5rem; align-items:center;">
+              <input id="wl-city-input" type="text" placeholder="Enter city (e.g. Delhi, Manali, Mumbai)"
+                autocomplete="off" onfocus="this.select()" style="flex:1; border:none; border-radius:50px; padding:.6rem 1rem;
+                       font-size:.92rem; outline:none; min-width:0;" />
+              <button id="wl-go-btn" onclick="event.stopPropagation(); wlFetchWeather();" style="background:#ff385c; color:#fff; border:none; border-radius:50px;
+                       padding:.6rem 1.3rem; font-weight:700; cursor:pointer;
+                       white-space:nowrap; flex-shrink:0;">
+                ☀️ Go
+              </button>
+            </div>
+            <div id="wl-weather-result"
+              style="margin-top:.8rem; color:#fff; font-size:.9rem; line-height:1.55; text-align:center;"></div>
+          </div>
         </div>
 
       </div>
     </section>
+
+    <style>
+      #wl-weather-widget {
+        animation: wlFadeIn .25s ease;
+      }
+
+      @keyframes wlFadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+    </style>
+
+    <script>
+      (function () {
+        /* ── In-memory cache (city → data, expires in 10 min) ──────────── */
+        var _wlCache = {};
+        var _wlCacheTTL = 10 * 60 * 1000; // 10 minutes
+
+        function getCached(city) {
+          var key = city.toLowerCase();
+          var item = _wlCache[key];
+          if (item && (Date.now() - item.ts) < _wlCacheTTL) return item.data;
+          return null;
+        }
+        function setCache(city, data) {
+          _wlCache[city.toLowerCase()] = { data: data, ts: Date.now() };
+        }
+
+        /* ── Toggle open/close ─────────────────────────────────────────── */
+        window.wlWeatherToggle = function () {
+          var w = document.getElementById('wl-weather-widget');
+          if (!w) return;
+          var opening = (w.style.display === 'none' || w.style.display === '');
+          w.style.display = opening ? 'block' : 'none';
+          if (opening) {
+            // Scroll widget into view smoothly so it's always visible
+            setTimeout(function () {
+              w.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+              var inp = document.getElementById('wl-city-input');
+              if (inp) setTimeout(function () { inp.focus(); inp.select(); }, 300);
+            }, 50);
+          }
+        };
+
+        /* Close when clicking OUTSIDE the widget OR the toggle button */
+        document.addEventListener('click', function (e) {
+          var w = document.getElementById('wl-weather-widget');
+          var btn = document.getElementById('wl-weather-btn');
+          if (!w || w.style.display === 'none') return;
+          if (btn && btn.contains(e.target)) return;
+          if (w.contains(e.target)) return;
+          w.style.display = 'none';
+        });
+
+        /* Enter key in city input */
+        document.addEventListener('DOMContentLoaded', function () {
+          var inp = document.getElementById('wl-city-input');
+          if (inp) inp.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') { e.preventDefault(); wlFetchWeather(); }
+          });
+        });
+
+        /* ── Fetch & display weather ───────────────────────────────────── */
+        window.wlFetchWeather = async function () {
+          var inp = document.getElementById('wl-city-input');
+          var res = document.getElementById('wl-weather-result');
+          var btn = document.getElementById('wl-go-btn');
+          if (!inp || !res) return;
+
+          var city = inp.value.trim();
+          if (!city) {
+            res.innerHTML = '<span style="color:#ffd700;">⚠️ Please enter a city name.</span>';
+            return;
+          }
+
+          /* ── Check cache first → instant result ── */
+          var cached = getCached(city);
+          if (cached) {
+            wlRenderResult(cached, city, res);
+            if (inp) { inp.value = ''; inp.focus(); }
+            return;
+          }
+
+          res.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>&nbsp;Fetching weather…';
+          if (btn) btn.disabled = true;
+
+          /* ── Fetch with 6s timeout ── */
+          var controller = new AbortController();
+          var timer = setTimeout(function () { controller.abort(); }, 6000);
+
+          try {
+            var resp = await fetch(
+              '/api/features/weather?city=' + encodeURIComponent(city) + '&limit=5',
+              { signal: controller.signal }
+            );
+            clearTimeout(timer);
+            var data = await resp.json();
+
+            if (!resp.ok || data.error) {
+              res.innerHTML = '<span style="color:#ffd700;">⚠️ ' +
+                (data.error || 'City not found. Try another name.') + '</span>';
+              return;
+            }
+
+            /* Save to cache for instant re-use */
+            setCache(city, data);
+            wlRenderResult(data, city, res);
+
+          } catch (err) {
+            clearTimeout(timer);
+            if (err.name === 'AbortError') {
+              res.innerHTML = '<span style="color:#ffd700;">⚠️ Took too long. Try again.</span>';
+            } else {
+              res.innerHTML = '<span style="color:#ffd700;">⚠️ Network error. Try again.</span>';
+            }
+          } finally {
+            if (btn) btn.disabled = false;
+            if (inp) { inp.value = ''; inp.focus(); }
+          }
+        };
+
+        /* ── Shared render function (used by fetch & cache hit) ─────────── */
+        function wlRenderResult(data, city, res) {
+          var w = data.weather;
+          var displayCity = city.charAt(0).toUpperCase() + city.slice(1);
+
+          var iconHtml = '';
+          if (w.icon) {
+            if (w.icon.startsWith('http')) {
+              iconHtml = '<img src="' + w.icon +
+                '" style="width:30px;height:30px;vertical-align:middle;margin-right:5px;"' +
+                ' onerror="this.remove()" /> ';
+            } else {
+              iconHtml = '<span style="font-size:1.6rem;vertical-align:middle;margin-right:4px;">'
+                + w.icon + '</span> ';
+            }
+          }
+
+          var badHtml = w.isBadWeather
+            ? '<br><span style="color:#ffd700;font-size:.85rem;">🌧️ Bad weather — indoor-friendly stays shown first!</span>'
+            : '';
+
+          var linkHtml = (data.listings && data.listings.length > 0)
+            ? '<br><a href="/listings?search=' + encodeURIComponent(city) +
+            '" style="color:#ffd700;font-weight:700;font-size:.88rem;text-decoration:none;">🏠 ' +
+            data.listings.length + ' stays in ' + displayCity + ' →</a>'
+            : '<br><span style="opacity:.8;font-size:.85rem;">No listings in ' + displayCity + ' yet.</span>';
+
+          var foreHtml = '';
+          if (w.forecast && w.forecast.length) {
+            foreHtml = '<br><div style="margin-top:.6rem;">' +
+              '<div style="font-size:.72rem;opacity:.75;letter-spacing:.05em;text-transform:uppercase;margin-bottom:.35rem;">📅 Next 3 Days</div>' +
+              '<div style="display:flex;gap:.45rem;flex-wrap:wrap;justify-content:center;">';
+            w.forecast.forEach(function (day) {
+              var di = day.icon
+                ? (day.icon.startsWith('http')
+                  ? '<img src="' + day.icon + '" style="width:16px;" onerror="this.remove()">'
+                  : '<span>' + day.icon + '</span>')
+                : '';
+              foreHtml +=
+                '<span style="background:rgba(255,255,255,.15);border-radius:8px;' +
+                'padding:.2rem .55rem;font-size:.76rem;display:flex;align-items:center;gap:3px;">' +
+                di + ' ' + day.minTemp + '–' + day.maxTemp + '°C</span>';
+            });
+            foreHtml += '</div></div>';
+          }
+
+          res.innerHTML =
+            iconHtml +
+            '<b>' + displayCity + '</b>: ' + w.description +
+            ' · <b>' + w.temp + '°C</b>' +
+            badHtml + linkHtml + foreHtml;
+        }
+
+        /* ── Near Me Logic ─────────────────────────────────────────────── */
+        window.wlNearMe = function () {
+          const btn = document.getElementById('wl-near-btn');
+          const container = document.getElementById('listing-container');
+
+          if (!navigator.geolocation) {
+            return alert("Geolocation is not supported by your browser.");
+          }
+
+          btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Locating...</span>';
+          btn.disabled = true;
+
+          navigator.geolocation.getCurrentPosition(async (position) => {
+            const { latitude, longitude } = position.coords;
+
+            try {
+              btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Searching...</span>';
+              const response = await fetch(`/api/features/listings/near?lat=${latitude}&lng=${longitude}&km=50`);
+              const data = await response.json();
+
+              if (data.listings && data.listings.length > 0) {
+                renderNearbyListings(data.listings);
+                btn.innerHTML = '<i class="fa-solid fa-location-dot"></i> <span>Found ' + data.listings.length + ' Stays</span>';
+              } else {
+                alert("No listings found within 50km of your location.");
+                btn.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i> <span>Near Me</span>';
+              }
+            } catch (err) {
+              console.error(err);
+              alert("Error fetching nearby listings from server.");
+              btn.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i> <span>Near Me</span>';
+            } finally {
+              btn.disabled = false;
+            }
+          }, (err) => {
+            let msg = "Location access failed.";
+            if (err.code === 1) msg = "Location access denied. Please check browser AND Windows privacy settings.";
+            else if (err.code === 2) msg = "Position unavailable. Your device couldn't find a location (Try on a phone).";
+            else if (err.code === 3) msg = "Request timed out. Please try again.";
+
+            alert(msg);
+            btn.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i> <span>Near Me</span>';
+            btn.disabled = false;
+          }, { enableHighAccuracy: false, timeout: 10000 });
+        };
+
+        function renderNearbyListings(listings) {
+          const container = document.getElementById('listing-container');
+          if (!container) return;
+
+          container.innerHTML = listings.map(l => {
+            const hasDynamic = l.dynamicPrice && l.dynamicPrice !== l.price;
+            const priceHtml = hasDynamic 
+              ? `<span style="text-decoration: line-through; color: #888; font-size: 0.85rem;">&#8377; ${l.price.toLocaleString("en-IN")}</span> 
+                 <b>&#8377; ${l.dynamicPrice.toLocaleString("en-IN")}</b>`
+              : `&#8377; ${l.price.toLocaleString("en-IN")}`;
+
+            const badgeHtml = (hasDynamic && l.pricingBreakdown && l.pricingBreakdown.length > 0)
+              ? `<br>${l.pricingBreakdown.map(b => `
+                  <span class="badge bg-${b.color} mt-1 me-1" style="font-size: 0.65rem;">
+                    <i class="fa-solid fa-bolt"></i> ${b.label} (${b.change})
+                  </span>
+                `).join('')}`
+              : "";
+
+            return `
+            <div class="col">
+              <div class="listing-card-wrapper" style="position: relative;">
+                <a href="/listings/${l._id}" class="listing-link">
+                  <div class="card listing-card">
+                    <div class="listing-img-wrapper">
+                      <img src="${l.image.url}" class="card-img-top" alt="listing_image" />
+                      <div class="card-img-overlay"></div>
+                    </div>
+                    <div class="card-body">
+                      <p class="card-text">
+                        <b>${l.title}</b> <br>
+                        <span style="font-size:0.85rem; color:#717171;">
+                          <i class="fa-solid fa-location-dot" style="color:#ff385c;"></i>
+                          ${l.location}, ${l.country}
+                        </span>
+                        <br>
+                        <span class="base-price">
+                          ${priceHtml} / night
+                          ${badgeHtml}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          `;
+          }).join('');
+
+          // Scroll to results
+          container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+      })();
+    </script>
+
+
     <% } %>
+
+
 
 
       <div id="filters">
@@ -128,7 +447,8 @@
 
         <% } else { %>
 
-          <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 mt-2 listing-grid-row">
+          <div id="listing-container"
+            class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 mt-2 listing-grid-row">
 
             <% for(let listing of allListings) { %>
               <% if (listing._id) { %>
@@ -172,12 +492,33 @@
                             <br>
 
                             <span class="base-price">
-                              &#8377; <%= listing.price.toLocaleString("en-IN") %> / night
+                              <% if (listing.dynamicPrice && listing.dynamicPrice !== listing.price) { %>
+                                <span style="text-decoration: line-through; color: #888; font-size: 0.9rem;">
+                                  &#8377; <%= listing.price.toLocaleString("en-IN") %>
+                                </span>
+                                <b>&#8377; <%= listing.dynamicPrice.toLocaleString("en-IN") %></b> / night
+                              <% } else { %>
+                                &#8377; <%= listing.price.toLocaleString("en-IN") %> / night
+                              <% } %>
+                              
+                              <% if (listing.pricingBreakdown && listing.pricingBreakdown.length > 0) { %>
+                                <br>
+                                <% listing.pricingBreakdown.forEach(badge => { %>
+                                  <span class="badge bg-<%= badge.color %> mt-1 me-1" style="font-size: 0.65rem;">
+                                    <i class="fa-solid fa-bolt"></i> <%= badge.label %> (<%= badge.change %>)
+                                  </span>
+                                <% }) %>
+                              <% } %>
                             </span>
 
                             <span class="tax-info taxed-price">
-                              &#8377; <%= Math.round(listing.price * 1.18).toLocaleString("en-IN") %> / night
-                                &nbsp; +18% GST
+                              <% if (listing.dynamicPrice && listing.dynamicPrice !== listing.price) { %>
+                                &#8377; <%= Math.round(listing.dynamicPrice * 1.18).toLocaleString("en-IN") %> / night
+                                  &nbsp; +18% GST
+                              <% } else { %>
+                                &#8377; <%= Math.round(listing.price * 1.18).toLocaleString("en-IN") %> / night
+                                  &nbsp; +18% GST
+                              <% } %>
                             </span>
 
                           </p>

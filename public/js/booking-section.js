@@ -31,6 +31,7 @@
   const extraGuestFeePerNight = Number(
     root.dataset.extraGuestFeePerNight || "0",
   );
+  const offerPercent = Number(root.dataset.offerPercent || '0');
   const nightlyPrice = Number(
     root.dataset.nightlyPrice || "0",
   );
@@ -80,6 +81,8 @@
     summaryNights: document.getElementById("summaryNights"),
     summaryGuests: document.getElementById("summaryGuests"),
     summaryTotal: document.getElementById("summaryTotal"),
+    summaryPricingFactors: document.getElementById("summaryPricingFactors"),
+    summaryBadgesList: document.getElementById("summaryBadgesList"),
     guestLimitNote: document.getElementById(
       "guestLimitNote",
     ),
@@ -110,6 +113,7 @@
     baseGuests,
     extraGuestFeePerNight,
     nightlyPrice,
+    offerPercent,
     gstRate,
     ...refs,
   });
@@ -175,6 +179,12 @@
     "change",
     controller.updateDateAndPriceSummary,
   );
+
+  root.addEventListener("priceUpdated", (e) => {
+    if (e.detail) {
+      controller.updatePriceDetails(e.detail);
+    }
+  });
 
   controller.updateGuestStateUI();
   controller.updateDateAndPriceSummary();

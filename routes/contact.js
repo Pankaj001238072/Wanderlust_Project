@@ -27,7 +27,7 @@ router.post("/", async (req, res) => {
   const secret = process.env.RECAPTCHA_SECRET_KEY;
   try {
     const verifyUrl = "https://www.google.com/recaptcha/api/siteverify";
-    
+
     // Better to send as form data in the body
     const params = new URLSearchParams();
     params.append("secret", secret);
@@ -77,7 +77,7 @@ router.post("/", async (req, res) => {
         const transporter = nodemailer.createTransport({
           host: process.env.SMTP_HOST || "smtp-relay.brevo.com",
           port: process.env.SMTP_PORT == '465' ? 2525 : (parseInt(process.env.SMTP_PORT) || 2525),
-          secure: false, 
+          secure: false,
           auth: {
             user: process.env.SMTP_USER,
             pass: process.env.SMTP_PASS,

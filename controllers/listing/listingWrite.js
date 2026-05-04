@@ -19,12 +19,12 @@ const createListing = async (req, res) => {
         "error",
         "Country and location are required.",
       );
-      return res.redirect("/listings/new");
+      return req.session.save(() => res.redirect("/listings/new"));
     }
 
     if (!req.file) {
       req.flash("error", "Image upload is required.");
-      return res.redirect("/listings/new");
+      return req.session.save(() => res.redirect("/listings/new"));
     }
 
     // Parallelize geocoding and image compression for speed
@@ -49,6 +49,7 @@ const createListing = async (req, res) => {
       maxInfants,
       maxPets,
       extraGuestFeePerNight,
+      addOns,
     } = req.body.listing;
 
     const newListing = new Listing({
@@ -62,6 +63,7 @@ const createListing = async (req, res) => {
       maxInfants,
       maxPets,
       extraGuestFeePerNight,
+      addOns: Array.isArray(addOns) ? addOns.filter(a => a.name) : [],
       country: country.trim(),
       location: location.trim(),
     });
@@ -74,7 +76,7 @@ const createListing = async (req, res) => {
         "error",
         "You must be logged in to create a listing.",
       );
-      return res.redirect("/login");
+      return req.session.save(() => res.redirect("/login"));
     }
 
     // (Compression moved to parallel block above)
@@ -93,7 +95,7 @@ const createListing = async (req, res) => {
       "success",
       "New listing created successfully!",
     );
-    res.redirect("/listings");
+    req.session.save(() => res.redirect("/listings"));
   } catch (err) {
     if (req.file) await deleteLocalFile(req.file);
 
@@ -101,7 +103,7 @@ const createListing = async (req, res) => {
       "error",
       err.message || "Something went wrong.",
     );
-    res.redirect("/listings/new");
+    req.session.save(() => res.redirect("/listings/new"));
   }
 };
 
@@ -111,52 +113,7 @@ const updateListing = async (req, res) => {
   const listing = await Listing.findById(id);
   if (!listing) {
     req.flash("error", "Listing not found.");
-    return res.redirect("/listings");
-  }
-
-  const newCountry = req.body.listing.country?.trim();
-  const newLocation = req.body.listing.location?.trim();
-
-  if (
-    newCountry &&
-    newLocation &&
-    (newCountry !== listing.country ||
-      newLocation !== listing.location)
-  ) {
-    try {
-      // Parallelize geocoding and image compression if both are present
-      if (req.file) {
-        const path = require("path");
-        const { compressImage } = require("../../helpers/imageHelper");
-        const tempPath = req.file.path;
-        const outputDir = path.dirname(tempPath);
-
-        const [geoData, compressedPath] = await Promise.all([
-          validateLocation(newCountry, newLocation),
-          compressImage(tempPath, outputDir).catch(() => tempPath),
-        ]);
-
-        listing.geometry = geoData.geometry;
-
-        // Image upload (optimization: handle it here if location also changed)
-        if (listing.image?.filename) {
-          await deleteImage(listing.image.filename);
-        }
-        const imageData = await uploadImage(compressedPath);
-        await deleteLocalFile(req.file);
-        if (compressedPath !== tempPath) {
-          await deleteLocalFile(compressedPath);
-        }
-        listing.image = imageData;
-        req.file = null; // Mark handled
-      } else {
-        const geoData = await validateLocation(newCountry, newLocation);
-        listing.geometry = geoData.geometry;
-      }
-    } catch (err) {
-      req.flash("error", err.message);
-      return res.redirect(`/listings/${id}/edit`);
-    }
+    return req.session.save(() => res.redirect("/listings"));
   }
 
   const {
@@ -170,8 +127,15 @@ const updateListing = async (req, res) => {
     maxInfants,
     maxPets,
     extraGuestFeePerNight,
+    addOns,
+    country: newCountry,
+    location: newLocation,
   } = req.body.listing;
 
+  // Prepare all parallel tasks
+  const tasks = [];
+
+  // Update non-async fields immediately
   listing.title = title;
   listing.description = description;
   listing.price = price;
@@ -182,37 +146,64 @@ const updateListing = async (req, res) => {
   listing.maxInfants = maxInfants;
   listing.maxPets = maxPets;
   listing.extraGuestFeePerNight = extraGuestFeePerNight;
-  listing.country = newCountry;
-  listing.location = newLocation;
+  
+  if (addOns) {
+    listing.addOns = Object.values(addOns).filter(a => a.name && a.price);
+  } else {
+    listing.addOns = [];
+  }
 
+  // 1. Geocoding Task
+  if (newCountry && newLocation && (newCountry !== listing.country || newLocation !== listing.location)) {
+    tasks.push(validateLocation(newCountry, newLocation).then(geo => {
+      listing.geometry = geo.geometry;
+      listing.country = newCountry;
+      listing.location = newLocation;
+    }));
+  } else {
+    listing.country = newCountry || listing.country;
+    listing.location = newLocation || listing.location;
+  }
+
+  // 2. Image Processing Task
   if (req.file) {
-    try {
-      if (listing.image?.filename) {
-        await deleteImage(listing.image.filename);
-      }
+    tasks.push((async () => {
       const path = require("path");
       const { compressImage } = require("../../helpers/imageHelper");
       const tempPath = req.file.path;
       const outputDir = path.dirname(tempPath);
+      
       const compressedPath = await compressImage(tempPath, outputDir).catch(() => tempPath);
       
-      const imageData = await uploadImage(compressedPath);
-      await deleteLocalFile(req.file);
-      if (compressedPath !== tempPath) {
-        await deleteLocalFile(compressedPath);
+      // Delete old image in background - don't await it
+      if (listing.image?.filename) {
+        setImmediate(() => deleteImage(listing.image.filename).catch(e => console.error("Cloudinary delete failed:", e)));
       }
+
+      const imageData = await uploadImage(compressedPath);
+      
+      // Cleanup local files in background
+      setImmediate(() => {
+        deleteLocalFile(req.file).catch(() => {});
+        if (compressedPath !== tempPath) deleteLocalFile(compressedPath).catch(() => {});
+      });
+      
       listing.image = imageData;
-    } catch (err) {
-      await deleteLocalFile(req.file);
-      req.flash("error", "Image upload failed.");
-      return res.redirect(`/listings/${id}/edit`);
-    }
+    })());
   }
 
-  await listing.save();
+  try {
+    // Run all async tasks (geocoding, image upload) in parallel
+    await Promise.all(tasks);
 
-  req.flash("success", "Listing updated successfully!");
-  res.redirect(`/listings/${id}`);
+    await listing.save();
+    req.flash("success", "Listing updated successfully!");
+    req.session.save(() => res.redirect(`/listings/${id}`));
+  } catch (err) {
+    if (req.file) await deleteLocalFile(req.file);
+    req.flash("error", err.message);
+    req.session.save(() => res.redirect(`/listings/${id}/edit`));
+  }
 };
 
 module.exports = {

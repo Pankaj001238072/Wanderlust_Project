@@ -1,0 +1,339 @@
+<% layout("/layouts/boilerplate") %>
+
+  <style>
+    .wallet-page {
+      max-width: 720px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .wallet-hero {
+      background: linear-gradient(135deg, #ff385c 0%, #ff6584 50%, #ffb347 100%);
+      border-radius: 20px;
+      color: #fff;
+      padding: 2.5rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      box-shadow: 0 8px 32px rgba(255, 56, 92, .25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .wallet-hero::before {
+      content: "🪙";
+      font-size: 8rem;
+      position: absolute;
+      right: -1rem;
+      top: -1rem;
+      opacity: .15;
+    }
+
+    .wallet-hero h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      margin: 0;
+    }
+
+    .wallet-hero p {
+      opacity: .9;
+      margin: .3rem 0 0;
+    }
+
+    .wallet-hero small {
+      opacity: .75;
+    }
+
+    .stat-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-card {
+      flex: 1;
+      min-width: 140px;
+      background: #fff;
+      border-radius: 14px;
+      padding: 1.2rem;
+      text-align: center;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, .07);
+    }
+
+    .stat-card .num {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #ff385c;
+    }
+
+    .stat-card .lbl {
+      color: #888;
+      font-size: .82rem;
+    }
+
+    .refer-box {
+      background: #fff8f0;
+      border: 1.5px dashed #ff385c;
+      border-radius: 14px;
+      padding: 1.3rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .refer-code {
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: 4px;
+      color: #ff385c;
+      background: #fff;
+      border-radius: 8px;
+      padding: .3rem 1rem;
+      display: inline-block;
+      cursor: pointer;
+      user-select: all;
+      border: 1px solid #ffd3dc;
+    }
+
+    .tx-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .tx-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: .8rem 0;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: .9rem;
+      gap: 12px;
+    }
+
+    .tx-info {
+      flex: 1;
+      min-width: 0;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    .tx-amount {
+      flex-shrink: 0;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .tx-item:last-child {
+      border: none;
+    }
+
+    .tx-credit {
+      color: #198754;
+      font-weight: 700;
+    }
+
+    .tx-debit {
+      color: #dc3545;
+      font-weight: 700;
+    }
+
+    .tx-date {
+      color: #aaa;
+      font-size: .78rem;
+    }
+
+    .section-title {
+      font-weight: 700;
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+
+    .card-box {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, .06);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .how-item {
+      display: flex;
+      gap: .8rem;
+      align-items: center;
+      margin-bottom: .8rem;
+    }
+
+    .how-icon {
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+
+    @media (max-width: 576px) {
+      .wallet-page {
+        margin: 1rem auto;
+      }
+
+      .wallet-hero {
+        padding: 1.5rem;
+      }
+
+      .wallet-hero h1 {
+        font-size: 2.2rem;
+      }
+
+      .wallet-hero::before {
+        font-size: 5rem;
+      }
+
+      .stat-card {
+        min-width: 100px;
+        padding: 1rem .5rem;
+      }
+
+      .stat-card .num {
+        font-size: 1.3rem;
+      }
+
+      .refer-code {
+        font-size: 1.4rem;
+        letter-spacing: 2px;
+        width: 100%;
+        text-align: center;
+      }
+
+      .card-box {
+        padding: 1.2rem;
+      }
+
+      .how-item {
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+
+  <div class="wallet-page">
+
+    <!-- Hero Wallet Balance -->
+    <div class="wallet-hero">
+      <p>Your Wanderlust Wallet</p>
+      <h1>
+        <%= wallet.balance %> <span style="font-size:1.5rem;">coins</span>
+      </h1>
+      <small>≈ ₹<%= wallet.balance %> redeemable at checkout</small>
+    </div>
+
+    <!-- Stats -->
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="num">
+          <%= wallet.totalEarned || 0 %>
+        </div>
+        <div class="lbl">Total Earned</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">
+          <%= wallet.totalRedeemed || 0 %>
+        </div>
+        <div class="lbl">Total Redeemed</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">
+          <%= wallet.transactions.length %>
+        </div>
+        <div class="lbl">Transactions</div>
+      </div>
+    </div>
+
+    <!-- Refer Code -->
+    <div class="card-box">
+      <div class="section-title">🎁 Your Referral Code</div>
+      <% if (wallet.referCode) { %>
+        <div class="refer-box">
+          <p style="margin-bottom:.5rem; color:#555;">Share this code with friends and earn <b>50 bonus coins</b> when
+            they book!</p>
+          <div class="refer-code" id="referCode" onclick="copyCode()">
+            <%= wallet.referCode %>
+          </div>
+          <br>
+          <small id="copyMsg" style="color:#198754; display:none;">✅ Copied to clipboard!</small>
+        </div>
+        <% } else { %>
+          <p style="color:#888;">Your referral code will appear after your first booking.</p>
+          <% } %>
+    </div>
+
+    <!-- Apply Referral Code (Only if not already referred) -->
+    <% if (!wallet.referredBy) { %>
+      <div class="card-box">
+        <div class="section-title">🎟️ Have a Referral Code?</div>
+        <p style="color:#666; font-size:.85rem; margin-bottom:1rem;">Enter your friend's code to get <b>25 welcome
+            coins</b> instantly!</p>
+        <form action="/wallet/refer" method="POST" class="d-flex gap-2">
+          <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+          <input type="text" name="code" class="form-control" placeholder="E.g. ABC123"
+            style="text-transform: uppercase;" required>
+          <button type="submit" class="btn btn-dark fw-bold px-4">Apply</button>
+        </form>
+      </div>
+      <% } %>
+
+        <!-- How It Works -->
+        <div class="card-box">
+          <div class="section-title">⚡ How It Works</div>
+          <div class="how-item">
+            <div class="how-icon">🏠</div>
+            <div><b>Earn Coins</b> – Get 1 coin for every ₹100 spent on bookings.</div>
+          </div>
+          <div class="how-item">
+            <div class="how-icon">💳</div>
+            <div><b>Redeem</b> – Use coins at checkout. 1 coin = ₹1 off (max 20% per booking).</div>
+          </div>
+          <div class="how-item">
+            <div class="how-icon">👥</div>
+            <div><b>Refer Friends</b> – Earn 50 bonus coins when a friend books using your code.</div>
+          </div>
+        </div>
+
+        <!-- Transaction History -->
+        <div class="card-box">
+          <div class="section-title">📜 Transaction History</div>
+          <% if (wallet.transactions.length===0) { %>
+            <p style="color:#aaa; text-align:center; padding:1rem 0;">No transactions yet. Start booking to earn coins!
+              🎉
+            </p>
+            <% } else { %>
+              <ul class="tx-list">
+                <% for (const tx of wallet.transactions.slice().reverse()) { %>
+                  <li class="tx-item">
+                    <div class="tx-info">
+                      <div style="line-height: 1.3;">
+                        <%= tx.description || tx.type %>
+                      </div>
+                      <div class="tx-date">
+                        <%= new Date(tx.createdAt).toLocaleDateString("en-IN", { day:"2-digit", month:"short", year:"numeric" }) %> • 
+                        <%= new Date(tx.createdAt).toLocaleTimeString("en-IN", { hour: '2-digit', minute: '2-digit' }) %>
+                      </div>
+                    </div>
+                    <div class="tx-amount <%= tx.type === 'credit' ? 'tx-credit' : 'tx-debit' %>">
+                      <%= tx.type==='credit' ? '+' : '-' %>
+                        <%= tx.coins %> coins
+                    </div>
+                  </li>
+                  <% } %>
+              </ul>
+              <% } %>
+        </div>
+
+  </div>
+
+  <script>
+    function copyCode() {
+      const code = document.getElementById("referCode").textContent.trim();
+      navigator.clipboard.writeText(code).then(() => {
+        const msg = document.getElementById("copyMsg");
+        msg.style.display = "inline";
+        setTimeout(() => msg.style.display = "none", 2000);
+      });
+    }
+  </script>

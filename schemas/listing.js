@@ -52,6 +52,7 @@ const listingSchema = Joi.object({
       )
       .required(),
     image: Joi.any(),
+    addOns: Joi.any().optional(),
   })
     .required()
     .custom((value, helpers) => {

@@ -1,0 +1,243 @@
+<% layout("/layouts/boilerplate") %>
+
+    <div class="row mt-4 mb-3">
+        <div class="col-11 col-md-8 col-lg-6 col-xl-5 mx-auto">
+            <div class="card shadow border-0" style="border-radius: 12px;">
+                <div class="pt-3 pb-2 px-3 px-md-4">
+                    <div class="text-center mb-2">
+                        <h5 class="fw-bold mb-1 mt-2">Group Booking</h5>
+                        <p class="text-muted" style="font-size: 0.85rem; margin-bottom: 0;">Split stay at <b>
+                                <%= split.booking.listing.title %>
+                            </b></p>
+                    </div>
+
+                    <div class="booking-summary-box bg-light border px-4 py-2 rounded-3 mb-3 text-sm"
+                        style="font-size: 0.85rem; border-color: #ced4da !important;">
+                        
+                        <% if (typeof minutesRemaining !== 'undefined' && minutesRemaining !== null) { %>
+                        <div class="alert alert-warning py-2 mb-2 border-0" style="background: #fff4e6; color: #d9480f; font-size: 0.8rem;">
+                            <i class="fa-solid fa-clock-rotate-left me-1"></i>
+                            <b>Urgent Stay:</b> Please complete payment within <b><%= minutesRemaining %> minutes</b>. After this, same-day bookings are automatically cancelled to release the dates.
+                        </div>
+                        <% } %>
+
+                        <div class="d-flex justify-content-between mb-1 mt-1">
+                            <span class="text-muted">Total Price (<%= split.splitWays %> Shares)</span>
+                            <span class="fw-bold">₹<%= split.totalAmount.toLocaleString("en-IN") %></span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-muted">Paid Shares</span>
+                            <span class="text-success fw-bold">
+                                <%= split.paidShares %> / <%= split.splitWays %>
+                            </span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="fw-bold">Your Share</span>
+                            <span class="text-danger fw-bold" style="font-size: 1.1rem;">₹<%=
+                                    split.amountPerPerson.toLocaleString("en-IN") %></span>
+                        </div>
+                    </div>
+
+                    <form action="/split/pay/<%= split.paymentToken %>/confirm" method="POST" id="splitPayForm">
+                        <!-- 🪙 Wallet Section -->
+                        <% if (walletBalance > 0) { %>
+                        <div class="wallet-section border rounded-3 p-3 mb-3" style="background: #f8f9ff; border-color: #d1d9ff !important;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <div class="wallet-icon-circle me-2 d-flex align-items-center justify-content-center" 
+                                         style="width: 32px; height: 32px; background: #4f46e5; border-radius: 50%; color: white;">
+                                        <i class="fa-solid fa-coins" style="font-size: 0.85rem;"></i>
+                                    </div>
+                                    <div>
+                                        <p class="mb-0 fw-bold" style="font-size: 0.85rem; color: #3730a3;">Wanderlust Wallet</p>
+                                        <small class="text-muted" style="font-size: 0.75rem;">You have <%= walletBalance %> coins available</small>
+                                    </div>
+                                </div>
+                                <div class="form-check form-switch mb-0">
+                                    <input class="form-check-input" type="checkbox" id="useWalletCoins" style="cursor: pointer; width: 2.2rem; height: 1.1rem;">
+                                </div>
+                            </div>
+                            <div id="walletImpact" class="mt-2 d-none" style="font-size: 0.8rem; border-top: 1px dashed #ced4da; padding-top: 0.5rem;">
+                                <div class="d-flex justify-content-between mt-2">
+                                    <span class="text-muted">Coins Discount</span>
+                                    <span class="text-success fw-bold">-₹<%= Math.min(walletBalance, split.amountPerPerson) %></span>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="coinsUsed" id="coinsUsedInput" value="0">
+                        <% } %>
+
+                        <div class="border rounded-3 px-4 py-3 bg-white mb-3" style="border-color: #ced4da !important;">
+
+                            <!-- Header -->
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fa-solid fa-lock text-success me-2"></i>
+                                <span class="text-primary fw-semibold"
+                                    style="font-size: 0.9rem; color: #0073e6 !important;">Secure, fast checkout with
+                                    Link <i class="fa-solid fa-chevron-down ms-1"
+                                        style="font-size: 0.75rem;"></i></span>
+                            </div>
+
+                            <!-- Email Address -->
+                            <div class="mb-3">
+                                <label class="form-label text-muted mb-1" style="font-size: 0.85rem;">Email
+                                    Address</label>
+                                <input type="email" name="email" class="form-control" placeholder="friend@example.com"
+                                    style="font-size: 0.95rem;" value="<%= currUser ? currUser.email : '' %>" required>
+                            </div>
+
+                            <!-- Card Number -->
+                            <div class="mb-3">
+                                <label class="form-label text-muted mb-1" style="font-size: 0.85rem;">Card
+                                    number</label>
+                                <div class="position-relative">
+                                    <input type="text" id="cardNumber" class="form-control"
+                                        placeholder="1234 1234 1234 1234"
+                                        style="padding-right: 120px; font-size: 0.9rem;" maxlength="19" required>
+                                    <div
+                                        class="position-absolute top-50 translate-middle-y end-0 me-2 d-flex gap-2 align-items-center">
+                                        <i class="fa-brands fa-cc-visa" style="color: #1434CB; font-size: 1.4rem;"></i>
+                                        <i class="fa-brands fa-cc-mastercard"
+                                            style="color: #EB001B; font-size: 1.4rem;"></i>
+                                        <i class="fa-brands fa-cc-amex" style="color: #002663; font-size: 1.4rem;"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Expiration and CVC -->
+                            <div class="row g-3 mb-2">
+                                <div class="col-6">
+                                    <label class="form-label text-muted mb-1" style="font-size: 0.85rem;">Expiration
+                                        date</label>
+                                    <input type="text" id="expDate" class="form-control" placeholder="MM / YY"
+                                        style="font-size: 0.95rem;" maxlength="7" required>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label text-muted mb-1" style="font-size: 0.85rem;">Security
+                                        code</label>
+                                    <div class="position-relative">
+                                        <input type="text" id="cvc" class="form-control" placeholder="CVC"
+                                            style="font-size: 0.95rem;" maxlength="3" required>
+                                        <i class="fa-regular fa-credit-card position-absolute top-50 translate-middle-y end-0 pe-2 text-muted"
+                                            style="font-size: 1.2rem;"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Country -->
+                            <div class="mb-2">
+                                <label class="form-label text-muted mb-1" style="font-size: 0.85rem;">Country</label>
+                                <select class="form-select text-dark" style="font-size: 0.95rem;">
+                                    <option value="IN">India</option>
+                                    <option value="US">United States</option>
+                                    <option value="UK">United Kingdom</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" id="payButton"
+                            class="btn btn-dark w-100 py-2 mb-2 fw-bold rounded-3 shadow-sm btn-pay-hover"
+                            style="background-color: #1a1a1a; font-size: 1.05rem;"
+                            data-base-price="<%= split.amountPerPerson %>">
+                            Pay ₹<%= split.amountPerPerson.toLocaleString("en-IN") %>
+                        </button>
+                        <a href="/listings/<%= split.booking.listing._id %>"
+                            class="btn w-100 py-2 rounded-3 text-muted border btn-cancel-hover text-decoration-none d-block text-center"
+                            style="font-size: 0.95rem; transition: background-color 0.2s ease;">
+                            Cancel and go back
+                        </a>
+                    </form>
+
+                    <p class="text-center mt-3 mb-0 text-muted" style="font-size: 0.85rem;">
+                        <i class="fa-solid fa-shield-halved me-1"></i> Your payment is secure and encrypted.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .card-input-mockup {
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+        }
+
+        .btn-pay-hover:hover {
+            background-color: #495057 !important;
+            border-color: #495057 !important;
+        }
+
+        .btn-cancel-hover:hover {
+            background-color: #6c757d !important;
+            color: #fff !important;
+            border-color: #6c757d !important;
+        }
+    </style>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const cardInput = document.getElementById('cardNumber');
+            const expInput = document.getElementById('expDate');
+            const cvcInput = document.getElementById('cvc');
+
+            // Card number formatting
+            if (cardInput) {
+                cardInput.addEventListener('input', function (e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    let formattedValue = '';
+                    for (let i = 0; i < value.length; i++) {
+                        if (i > 0 && i % 4 === 0) formattedValue += ' ';
+                        formattedValue += value[i];
+                    }
+                    e.target.value = formattedValue.substring(0, 19);
+                });
+            }
+
+            // Expiration date formatting
+            if (expInput) {
+                expInput.addEventListener('input', function (e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length >= 1 && parseInt(value[0]) > 1 && value.length === 1) value = '0' + value;
+                    if (value.length >= 2) {
+                        let month = parseInt(value.substring(0, 2));
+                        if (month > 12) value = '12' + value.substring(2);
+                        if (month === 0) value = '01' + value.substring(2);
+                    }
+                    if (value.length > 2) value = value.substring(0, 2) + ' / ' + value.substring(2, 4);
+                    e.target.value = value;
+                });
+            }
+
+            // CVC formatting
+            if (cvcInput) {
+                cvcInput.addEventListener('input', function (e) {
+                    e.target.value = e.target.value.replace(/\D/g, '').substring(0, 3);
+                });
+            }
+
+            // Wallet Toggle Logic
+            const walletToggle = document.getElementById('useWalletCoins');
+            const walletImpact = document.getElementById('walletImpact');
+            const coinsUsedInput = document.getElementById('coinsUsedInput');
+            const payButton = document.getElementById('payButton');
+            
+            if (walletToggle) {
+                walletToggle.addEventListener('change', function() {
+                    const basePrice = parseInt(payButton.getAttribute('data-base-price'));
+                    const maxDiscount = Number('<%= walletBalance %>') || 0;
+                    const discount = Math.min(maxDiscount, basePrice);
+                    
+                    if (this.checked) {
+                        walletImpact.classList.remove('d-none');
+                        const finalPrice = basePrice - discount;
+                        payButton.textContent = `Pay ₹${finalPrice.toLocaleString("en-IN")}`;
+                        coinsUsedInput.value = discount;
+                    } else {
+                        walletImpact.classList.add('d-none');
+                        payButton.textContent = `Pay ₹${basePrice.toLocaleString("en-IN")}`;
+                        coinsUsedInput.value = 0;
+                    }
+                });
+            }
+        });
+    </script>

@@ -52,12 +52,14 @@
   align-items: center;
   gap: 0.35rem;
   background: rgba(255,255,255,0.18);
+  border: none;
   border-radius: 999px;
   padding: 0.35rem 0.8rem;
   font-size: 0.78rem;
   font-weight: 600;
   color: #fff;
   text-decoration: none;
+  cursor: pointer;
   transition: all 0.2s ease;
 }
 

@@ -100,15 +100,43 @@ router
       console.log("Username Length:", req.body.username ? req.body.username.length : 0);
       next();
     },
-    passport.authenticate("local", {
-      failureRedirect: "/login",
-      failureFlash: true,
-    }),
-    userController.login,
+    (req, res, next) => {
+      passport.authenticate("local", (err, user, info) => {
+        if (err) return next(err);
+        if (!user) {
+          req.flash("error", info ? info.message : "Invalid username or password");
+          return req.session.save(() => res.redirect("/login"));
+        }
+        req.logIn(user, (err) => {
+          if (err) return next(err);
+          req.session.save(() => {
+            userController.login(req, res);
+          });
+        });
+      })(req, res, next);
+    },
   );
 
 // Route to handle user logout
 router.get("/logout", userController.logout);
+
+// ── Forgot / Reset Password (OTP-based, mobile-friendly) ───────
+// Step 1: enter email
+router.get("/forgot-password", userController.renderForgotPassword);
+router.post("/forgot-password", wrapAsync(userController.forgotPassword));
+// Step 2: enter OTP
+router.get("/forgot-password/verify", wrapAsync(userController.renderForgotPasswordVerify));
+router.post("/forgot-password/verify", wrapAsync(userController.forgotPasswordVerify));
+router.post("/forgot-password/resend", wrapAsync(userController.resendResetOtp));
+// Step 3: set new password (session-gated, no token in URL)
+router.get("/reset-password", wrapAsync(userController.renderResetPassword));
+router.post("/reset-password", wrapAsync(userController.resetPassword));
+
+// ── Email Verification ─────────────────────────────────────────
+router.get("/verify-email", userController.renderVerifyEmail);
+router.post("/verify-email", wrapAsync(userController.verifyEmail));
+router.post("/resend-otp", wrapAsync(userController.resendOtp));
+
 
 // Legal info pages linked from footer
 router.get("/privacy", (req, res) => {

@@ -27,12 +27,25 @@ const userSchema = new Schema({
     default: "",
   },
 
-   wishlist: [
+  wishlist: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Listing",
     },
   ],
+
+  // ── Forgot-Password ───────────────────────────────────
+  resetPasswordToken: { type: String },
+  resetPasswordExpires: { type: Date },
+
+  // ── Email Verification ────────────────────────────────
+  isVerified: { type: Boolean, default: false },
+  verificationToken: { type: String },
+  verificationTokenExpires: { type: Date },
+
+  // 🎁 Loyalty – referral code (generated on first login/signup)
+  referCode: { type: String, unique: true, sparse: true },
+  referredBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
 });
 
 userSchema.plugin(passportLocalMongoose); // Adding passport-local-mongoose plugin to the userSchema to handle password hashing and authentication methods

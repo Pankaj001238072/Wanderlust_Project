@@ -9,14 +9,15 @@
                 or feedback? Please fill out the form below and our team will respond to you soon.</p>
             <form action="/contact" method="POST">
                 <input type="text" name="name" placeholder="Your name" required style="font-weight:500;" autofocus>
-                <input type="email" name="email" placeholder="Your email (e.g. you@gmail.com)" required style="font-weight:500;"
-                    pattern="^[a-zA-Z0-9._%+-]+@gmail\.com$">
+                <input type="email" name="email" placeholder="Your email (e.g. you@gmail.com)" required
+                    style="font-weight:500;" pattern="^[a-zA-Z0-9._%+-]+@gmail\.com$">
                 <textarea name="message" placeholder="Your message" required style="font-weight:500;"></textarea>
                 <!-- Google reCAPTCHA widget -->
                 <div style="margin:0.2rem 0;text-align:center;">
                     <div class="g-recaptcha" data-sitekey="<%= recaptchaSiteKey %>"></div>
                 </div>
-                <button type="submit" id="contactSubmitBtn"><i class="fa-solid fa-paper-plane" style="margin-right:6px;"></i>Send
+                <button type="submit" id="contactSubmitBtn"><i class="fa-solid fa-paper-plane"
+                        style="margin-right:6px;"></i>Send
                     Message</button>
             </form>
             <div style="margin-top:1rem;text-align:center;color:#888;font-size:0.95rem;">

@@ -38,7 +38,7 @@ async function cleanupOldFiles() {
 }
 
 // Run cleanup every minute
-timer = setInterval(cleanupOldFiles, ONE_MINUTE);
+const timer = setInterval(cleanupOldFiles, ONE_MINUTE);
 
 // Also run once on startup
 cleanupOldFiles();

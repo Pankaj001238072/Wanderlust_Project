@@ -36,8 +36,12 @@ const MAX_INFANTS_LIMIT = 5;
 const MAX_PETS_LIMIT = 10;
 
 const canCancelBooking = (booking, now = new Date()) => {
-  if (!booking || booking.status !== "confirmed")
-    return false;
+  if (!booking) return false;
+  
+  // Always allow cancelling pending split bookings (no time limit)
+  if (booking.status === "pending_split") return true;
+
+  if (booking.status !== "confirmed") return false;
 
   const bookingCreatedAt = new Date(booking.createdAt);
   const checkInDate = new Date(booking.checkIn);

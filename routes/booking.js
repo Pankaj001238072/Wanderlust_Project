@@ -28,6 +28,12 @@ router.get(
 );
 
 router.post(
+  "/update-payment-intent",
+  isLoggedIn,
+  wrapAsync(bookingController.updatePaymentIntent),
+);
+
+router.post(
   "/payment/cancel/:id",
   isLoggedIn,
   wrapAsync(bookingController.paymentCancel),

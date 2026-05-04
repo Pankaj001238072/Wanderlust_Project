@@ -44,7 +44,8 @@
                             <!-- 🛑 EXPLICIT CSRF & ROBUST CONFIRMATION 🛑 -->
                             <form action="/profile/delete" method="POST"
                                 onsubmit="return confirm('⚠️ Are you sure you want to permanently delete your account?\n\nThis will erase all your profile data, listings, bookings, and reviews.\nThis action CANNOT be undone.');">
-                                <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+                                <input type="hidden" name="_csrf"
+                                    value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
                                 <button type="submit" class="btn btn-outline-danger w-100 py-2 fw-bold">
                                     <i class="fa-solid fa-trash-can me-2"></i>Delete My Account
                                 </button>

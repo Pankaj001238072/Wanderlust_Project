@@ -75,6 +75,86 @@
                     listing.maxGuests ?? 4, maxKids: listing.maxKids ?? 0, maxInfants: listing.maxInfants ?? 0, maxPets:
                     listing.maxPets ?? 0, extraGuestFeePerNight: listing.extraGuestFeePerNight ?? 0, }) %>
 
+                <!-- 🎯 Fixed Add-on Services with Dynamic Prices -->
+                <div class="card p-3 mb-3 shadow-sm border-0 mt-3" style="background: #f8f9fa; border-radius: 14px;">
+                    <h5 class="mb-2" style="font-weight: 700;">🎁 Add-on Services & Experiences</h5>
+                    <p class="text-muted small mb-3">Enable services and set your own prices for this property.</p>
+                    
+                    <div id="addons-container">
+                        <% 
+                            const services = [
+                                { name: "Airport Pickup", sub: "Host will coordinate via chat", icon: "🚖", type: "fixed" },
+                                { name: "Bonfire Setup", sub: "Evening bonfire experience", icon: "🔥", type: "fixed" },
+                                { name: "Local Food Experience", sub: "Authentic local flavors", icon: "🍛", type: "per_person" }
+                            ];
+                        %>
+
+                        <% services.forEach((service, i) => { 
+                            const existing = (listing.addOns || []).find(a => a.name === service.name);
+                        %>
+                            <div class="addon-row d-flex align-items-center gap-3 mb-3 pb-3 border-bottom flex-wrap">
+                                <div class="form-check form-switch mb-0">
+                                    <input class="form-check-input addon-toggle" type="checkbox" id="toggle-<%= i %>" 
+                                           <%= existing ? 'checked' : '' %> style="cursor:pointer; width: 2.5rem; height: 1.25rem;">
+                                </div>
+                                <div class="flex-grow-1" style="min-width: 200px;">
+                                    <div class="fw-bold d-flex align-items-center gap-2">
+                                        <span><%= service.icon %></span> <%= service.name %>
+                                    </div>
+                                    <small class="text-muted d-block"><%= service.sub %></small>
+                                </div>
+                                <div class="addon-price-input-wrapper d-flex align-items-center gap-2 <%= existing ? '' : 'addon-disabled' %>">
+                                    <span class="small fw-bold text-muted">₹</span>
+                                    <input type="number" name="listing[addOns][<%= i %>][price]" 
+                                           class="form-control form-control-sm" 
+                                           value="<%= existing ? existing.price : '' %>" 
+                                           placeholder="Price" style="width: 100px;" 
+                                           <%= existing ? 'required' : 'disabled' %>>
+                                    <% if(service.type === 'per_person') { %>
+                                        <small class="text-muted">/person</small>
+                                    <% } %>
+                                    <input type="hidden" name="listing[addOns][<%= i %>][name]" value="<%= service.name %>" <%= existing ? '' : 'disabled' %>>
+                                    <input type="hidden" name="listing[addOns][<%= i %>][icon]" value="<%= service.icon %>" <%= existing ? '' : 'disabled' %>>
+                                    <input type="hidden" name="listing[addOns][<%= i %>][type]" value="<%= service.type %>" <%= existing ? '' : 'disabled' %>>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                </div>
+
+                <style>
+                    .addon-disabled {
+                        opacity: 0.5;
+                        pointer-events: none;
+                        transition: opacity 0.2s ease;
+                    }
+                </style>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const toggles = document.querySelectorAll('.addon-toggle');
+                        toggles.forEach(toggle => {
+                            toggle.addEventListener('change', function() {
+                                const wrapper = this.closest('.addon-row').querySelector('.addon-price-input-wrapper');
+                                const inputs = wrapper.querySelectorAll('input');
+                                if(this.checked) {
+                                    wrapper.classList.remove('addon-disabled');
+                                    inputs.forEach(input => {
+                                        input.disabled = false;
+                                        if(input.type === 'number') input.required = true;
+                                    });
+                                } else {
+                                    wrapper.classList.add('addon-disabled');
+                                    inputs.forEach(input => {
+                                        input.disabled = true;
+                                        if(input.type === 'number') input.required = false;
+                                    });
+                                }
+                            });
+                        });
+                    });
+                </script>
+
                     <button class="btn btn-dark edit-btn mb-2" id="editListingBtn" type="submit">Edit</button>
                     <a href="/listings/<%= listing._id %>" class="btn btn-dark mb-2 ms-2">Cancel</a>
             </form>

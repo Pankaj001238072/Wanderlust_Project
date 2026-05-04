@@ -106,6 +106,21 @@ const listingSchema = new Schema({
     ],
     index: true, // Speeds up filter queries
   },
+
+  // 🌟 Amenities – for weather-based smart recommendations
+  amenities: {
+    type: [String],
+    default: [],
+  },
+
+  // 🎁 Add-on Local Experiences (available at checkout)
+  addOns: [
+    {
+      name: { type: String, required: true },
+      price: { type: Number, required: true, min: 0 },
+      icon: { type: String, default: "🎯" },
+    },
+  ],
 });
 
 // Middleware to delete associated reviews when a listing is deleted
@@ -118,6 +133,9 @@ listingSchema.post("findOneAndDelete", async (listing) => {
     });
   }
 });
+
+// 🗺️ 2dsphere index for geospatial "Near Me" queries
+listingSchema.index({ geometry: "2dsphere" });
 
 // Create model
 const Listing = mongoose.model("Listing", listingSchema);

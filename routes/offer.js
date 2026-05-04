@@ -25,7 +25,7 @@ router.post("/:id/delete", isLoggedIn, async (req, res) => {
   const offer = await Offer.findById(req.params.id);
   if (!offer) {
     req.flash("error", "Offer not found!");
-    return res.redirect("/offer");
+    return req.session.save(() => res.redirect("/login"));
   }
   if (!offer.owner.equals(req.user._id)) {
     req.flash(
@@ -36,7 +36,7 @@ router.post("/:id/delete", isLoggedIn, async (req, res) => {
   }
   await Offer.findByIdAndDelete(req.params.id);
   req.flash("success", "Offer deleted successfully!");
-  res.redirect("/offer");
+  req.session.save(() => res.redirect("/login"));
 });
 
 module.exports = router;

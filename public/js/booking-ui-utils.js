@@ -53,6 +53,7 @@ window.ListingBookingUtils = {
     baseGuests,
     extraGuestFeePerNight,
     nightlyPrice,
+    offerPercent,
     gstRate,
   }) {
     if (!checkInValue || !checkOutValue) {
@@ -87,7 +88,10 @@ window.ListingBookingUtils = {
     const subtotal =
       nights * nightlyPrice +
       extraGuests * extraGuestFeePerNight * nights;
-    const total = Math.round(subtotal * (1 + gstRate));
+      
+    const offerDiscount = Math.round(subtotal * ((offerPercent || 0) / 100));
+    const subtotalAfterDiscount = subtotal - offerDiscount;
+    const total = Math.round(subtotalAfterDiscount * (1 + gstRate));
 
     return {
       show: true,

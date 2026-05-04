@@ -8,6 +8,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node app.js",
+    "dev": "nodemon --exec \"npx kill-port 8080 && node app.js\"",
+    "kill": "npx kill-port 8080",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -16,7 +18,7 @@
   "type": "commonjs",
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
-    "axios": "^1.13.5",
+    "axios": "^1.15.2",
     "cloudinary": "^1.41.0",
     "compression": "^1.8.1",
     "connect-flash": "^0.1.1",
@@ -36,11 +38,13 @@
     "mongoose": "^8.19.2",
     "multer": "^2.0.2",
     "multer-storage-cloudinary": "^4.0.0",
+    "node-cron": "^4.2.1",
     "nodemailer": "^8.0.2",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^9.0.1",
     "sharp": "^0.34.5",
+    "socket.io": "^4.8.3",
     "stripe": "^20.4.0"
   }
 }

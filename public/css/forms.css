@@ -1,40 +1,37 @@
 @media (max-width: 600px) {
+  .host-policy-card {
+    padding: 1rem !important;
+    overflow-x: hidden;
+  }
   .host-policy-row {
-    flex-direction: row;
-    align-items: center;
-    gap: 0.75rem;
-    padding-bottom: 0.75rem;
-    margin-bottom: 0.75rem;
-    border-bottom: 1px solid #eceef2;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 0.5rem;
   }
   .host-policy-stepper {
-    width: auto;
-    justify-content: flex-start;
-    gap: 0.4rem;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
   .host-policy-step-btn {
-    width: 28px;
-    height: 28px;
-    font-size: 1rem;
-  }
-  .host-policy-count {
-    font-size: 1rem;
-    min-width: 32px;
-    text-align: center;
+    width: 32px;
+    height: 32px;
   }
 }
 textarea.form-control {
   overflow-y: hidden;
 }
 
-.add-btn {
+.add-btn, .edit-btn {
   background-color: #fe424d !important;
-  bottom: none !important;
+  border: none !important;
+  transition: background-color 0.2s ease !important;
 }
 
-.edit-btn {
-  background-color: #fe424d !important;
-  bottom: none !important;
+.add-btn:hover, .edit-btn:hover {
+  background-color: #e31c5f !important;
+  opacity: 0.9;
 }
 
 .form-label {

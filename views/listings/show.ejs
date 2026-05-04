@@ -1,9 +1,15 @@
 <% layout("/layouts/boilerplate") %>
 
+  <script id="listing-data" type="application/json">
+    <%- JSON.stringify(listing) %>
+  </script>
+  <script id="booked-dates-data" type="application/json">
+    <%- JSON.stringify(bookedDateRanges || []) %>
+  </script>
   <script>
     const mapToken = "<%= mapToken %>";
-    const listing = <%- JSON.stringify(listing) %>;
-    const unavailableDateRanges = <%- JSON.stringify(bookedDateRanges || []) %>;
+    const listing = JSON.parse(document.getElementById('listing-data').textContent);
+    const unavailableDateRanges = JSON.parse(document.getElementById('booked-dates-data').textContent);
   </script>
 
   <div class="row mt-3 show-page-row">
@@ -18,8 +24,7 @@
 
       <div class="show-img-wrapper" style="position: relative;">
         <!-- ❤️ Wishlist Button -->
-        <button
-          class="wishlist-btn <%= typeof isWishlisted !== 'undefined' && isWishlisted ? 'active' : '' %>"
+        <button class="wishlist-btn <%= typeof isWishlisted !== 'undefined' && isWishlisted ? 'active' : '' %>"
           onclick="event.stopPropagation(); toggleHeart(event, this)" data-id="<%= listing._id %>"
           style="top: 20px; right: 20px; width: 36px; height: 36px; font-size: 1rem;">
           <i
@@ -42,16 +47,40 @@
         </p>
 
         <p class="card-text">
-          &#8377; <%= listing.price.toLocaleString("en-IN") %>
-        </p>
-
-        <p class="card-text">
           <%= listing.location %>
         </p>
 
         <p class="card-text">
           <%= listing.country %>
         </p>
+        <p class="card-text" id="listing-price-row">
+          <span id="base-price-display">
+            <% if (listing.dynamicPrice && listing.dynamicPrice !==listing.price) { %>
+              <span style="text-decoration: line-through; color: #888; font-size: 0.9rem;">
+                &#8377; <%= listing.price.toLocaleString("en-IN") %>
+              </span>
+              <b>&#8377; <%= listing.dynamicPrice.toLocaleString("en-IN") %></b> / night
+              <% } else { %>
+                <b>&#8377; <%= listing.price.toLocaleString("en-IN") %></b> / night
+                <% } %>
+          </span>
+          <span id="dynamic-price-badge" class="ms-2" style="display:none;"></span>
+        </p>
+        <div id="pricing-breakdown-box" class="alert alert-light py-2 px-3 mt-0 mb-2 rounded-3" role="alert" <%-
+          (!listing.pricingBreakdown || listing.pricingBreakdown.length===0) ? 'style="display:none;"' : '' %>>
+          <% if (listing.pricingBreakdown && listing.pricingBreakdown.length> 0) { %>
+            <% listing.pricingBreakdown.forEach(b=> { %>
+              <span class="badge bg-<%= b.color || 'secondary' %> me-1" style="font-size: 0.7rem;">
+                <i class="fa-solid fa-bolt"></i>
+                <%= b.label %>
+                  <%= b.change %>
+              </span>
+              <% }) %>
+                <% } %>
+        </div>
+
+
+
 
         <p class="card-text mb-1">
           <b>Capacity:</b>
@@ -72,6 +101,15 @@
                       <% } %>
         </p>
 
+        <!-- 💬 Chat & Negotiate Button -->
+        <% if (currUser && listing.owner && String(currUser._id) !==String(listing.owner._id)) { %>
+          <a href="/listings/<%= listing._id %>/chat" class="btn btn-outline-danger btn-sm mt-2"
+            style="border-radius:50px;">
+            💬 Chat &amp; Negotiate Price
+          </a>
+          <% } %>
+
+
       </div>
 
     </div>
@@ -91,6 +129,8 @@
             data-confirm="Are you sure you want to delete this listing? This action cannot be undone.">
             <button type="submit" class="btn btn-dark">Delete</button>
           </form>
+
+
 
         </div>
 
@@ -207,8 +247,11 @@
 
           <div class="map-wrapper">
             <!-- Map Loader Skeleton (Overlay) -->
-            <div id="map-skeleton" class="position-absolute w-100 h-100 d-flex flex-column justify-content-center align-items-center text-muted" style="z-index: 10; background: #f8f9fa; top: 0; left: 0; transition: opacity 0.5s ease; pointer-events: none;">
-              <div class="spinner-grow text-danger mb-2" role="status" style="width: 2.5rem; height: 2.5rem; opacity: 0.6">
+            <div id="map-skeleton"
+              class="position-absolute w-100 h-100 d-flex flex-column justify-content-center align-items-center text-muted"
+              style="z-index: 10; background: #f8f9fa; top: 0; left: 0; transition: opacity 0.5s ease; pointer-events: none;">
+              <div class="spinner-grow text-danger mb-2" role="status"
+                style="width: 2.5rem; height: 2.5rem; opacity: 0.6">
                 <span class="visually-hidden">Loading...</span>
               </div>
               <span class="fw-medium small">Loading location map...</span>
@@ -216,6 +259,18 @@
 
             <!-- The Map -->
             <div id="map"></div>
+
+            <% if (currentUserBooking) { %>
+              <!-- Navigation Button: Only for Confirmed Guests -->
+              <div style="position: absolute; bottom: 10px; right: 10px; z-index: 30;">
+                <a href="https://www.google.com/maps/dir/?api=1&destination=<%= listing.geometry.coordinates[1] %>,<%= listing.geometry.coordinates[0] %>"
+                  target="_blank" class="btn btn-light shadow-sm"
+                  style="border-radius: 50px; padding: 0.5rem 1rem; font-weight: 700; color: #ff385c; border: 1px solid #ddd; display: flex; align-items: center; gap: 0.4rem; text-decoration: none; font-size: 0.85rem;">
+                  <i class="fa-solid fa-diamond-turn-right"></i>
+                  Get Directions
+                </a>
+              </div>
+              <% } %>
           </div>
 
         </div>
@@ -224,3 +279,74 @@
 
 
   <script defer src="/js/map.js"></script>
+
+  <!-- Dynamic Pricing JS -->
+  <script>
+    (function () {
+      const listingId = "<%= listing._id %>";
+      const badgeEl = document.getElementById("dynamic-price-badge");
+      const boxEl = document.getElementById("pricing-breakdown-box");
+      const baseEl = document.getElementById("base-price-display");
+
+      async function fetchDynamicPrice(checkIn) {
+        try {
+          const resp = await fetch(`/api/features/listings/price?listingId=${listingId}&checkIn=${checkIn}`);
+          const data = await resp.json();
+          if (data.error) return;
+
+          const changed = data.finalPrice !== data.basePrice;
+          
+          // 🔄 Update the booking section data attribute
+          const bookingRoot = document.getElementById("bookingSectionData");
+          if (bookingRoot) {
+            bookingRoot.dataset.nightlyPrice = data.finalPrice;
+            bookingRoot.dataset.offerPercent = data.offerPercent || 0;
+            // Dispatch event to notify booking-section.js with breakdown
+            bookingRoot.dispatchEvent(new CustomEvent('priceUpdated', { 
+              detail: { 
+                finalPrice: data.finalPrice, 
+                offerPercent: data.offerPercent || 0,
+                breakdown: data.breakdown 
+              } 
+            }));
+          }
+
+          if (changed) {
+            // Calculate sum of percentages from breakdown instead of compounded difference
+            let totalPct = 0;
+            if (data.breakdown && data.breakdown.length > 0) {
+              data.breakdown.forEach(b => {
+                const val = parseInt(b.change);
+                if (!isNaN(val)) totalPct += val;
+              });
+            } else {
+              totalPct = Math.round((data.finalPrice - data.basePrice) / data.basePrice * 100);
+            }
+
+            const color = totalPct > 0 ? "danger" : "success";
+            badgeEl.innerHTML = `<span class="badge bg-${color} fs-6">₹${data.finalPrice.toLocaleString("en-IN")}</span> <small class="text-muted">(${totalPct > 0 ? "+" : ""}${totalPct}%)</small>`;
+            badgeEl.style.display = "";
+          } else {
+            badgeEl.style.display = "none";
+          }
+
+          if (data.breakdown && data.breakdown.length > 0) {
+            boxEl.innerHTML = data.breakdown.map(b =>
+              `<span class="badge bg-${b.color || 'secondary'} me-1">${b.label} ${b.change}</span>`
+            ).join(" ");
+            boxEl.style.display = "";
+          } else {
+            boxEl.style.display = "none";
+          }
+        } catch (e) { /* silently fail */ }
+      }
+
+      // Watch for date changes in booking form
+      document.addEventListener("change", function (e) {
+        if (e.target && e.target.id === "checkIn" && e.target.value) {
+          // Give other listeners a micro-moment to process
+          setTimeout(() => fetchDynamicPrice(e.target.value), 10);
+        }
+      });
+    })();
+  </script>

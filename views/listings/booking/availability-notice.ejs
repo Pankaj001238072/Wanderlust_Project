@@ -2,13 +2,20 @@
     <div class="alert alert-warning py-2" role="alert">
         <b>Unavailable dates:</b>
         <ul class="mb-0 mt-2">
-            <% for (let dateRange of bookedDateRanges) { %>
-                <li>
-                    <%= new Date(dateRange.checkIn).toLocaleDateString("en-IN") %>
-                        -
-                        <%= new Date(dateRange.checkOut).toLocaleDateString("en-IN") %>
-                </li>
+             <% for (let dateRange of bookedDateRanges) { %>
+                <% if (new Date(dateRange.checkOut) > new Date()) { %>
+                    <li class="d-flex align-items-center justify-content-between mb-1">
+                        <span>
+                            <%= new Date(dateRange.checkIn).toLocaleDateString("en-IN") %> - <%= new Date(dateRange.checkOut).toLocaleDateString("en-IN") %>
+                        </span>
+                        <% if (dateRange.status === "pending_split") { %>
+                            <span class="badge rounded-pill text-bg-warning ms-2" style="font-size: 0.7rem;">
+                                <i class="fa-solid fa-users me-1"></i> Pending Group Payment
+                            </span>
+                        <% } %>
+                    </li>
                 <% } %>
+             <% } %>
         </ul>
 
         <small class="d-block mt-1">Available dates are not in the above ranges.</small>
