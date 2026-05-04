@@ -11,7 +11,7 @@
 
 ---
 
-🌐 **🚀 Live Demo:** https://wanderlust-project-nhvd.onrender.com
+🌐 **🚀 Live Demo:** https://wanderlust-project-nhvd.onrender.com  
 📌 **GitHub Repo:** https://github.com/Pankaj001238072/Wanderlust_Project
 
 ---
@@ -288,7 +288,7 @@ npm start
 
 Developed by **Pankaj Singh**
 
-🔗 LinkedIn: https://www.linkedin.com/in/pankaj-878772224/
+🔗 LinkedIn: https://www.linkedin.com/in/pankaj-878772224/  
 📧 Email: pankajsaini71004@gmail.com
 ---
 
